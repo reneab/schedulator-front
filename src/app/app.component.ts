@@ -11,10 +11,36 @@ import { FormsModule } from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'schedulator';
   repData;
+  errorMessage;
+  successMessage;
 
-  constructor(private newService: DataService) { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.newService.getAllSchedules().subscribe(data => this.repData = data);
+    this.dataService.getAllSchedules().subscribe(data => this.repData = data);
   }
+
+  onSave = function(element, isValid: boolean) {
+    this.dataService.saveScheduleElement(element).subscribe(res => {
+      this.successMessage = res;
+      this.errorMessage = [];
+      this.ngOnInit();
+    }, error => {
+      this.successMessage = [];
+      this.errorMessage = error._body;
+    });
+  };
+
+  delete = function(id: string) {
+    this.dataService.deleteScheduleElement(id)
+    .subscribe(res => {
+      this.successMessage = res;
+      this.errorMessage = [];
+      this.ngOnInit();
+    }, error => {
+        this.successMessage = [];
+        this.errorMessage = error._body;
+      });
+  };
+
 }
