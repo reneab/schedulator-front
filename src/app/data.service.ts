@@ -19,7 +19,7 @@ export class DataService {
 
   public saveScheduleElement(element) {
     return this.http.post(API_URL + '/schedules/save', element)
-      .map((response: Response) => response.json());
+    .map((response: Response) => response.text());
   }
 
   public getAllSchedules() {
@@ -30,7 +30,7 @@ export class DataService {
 
   public deleteScheduleElement(id: string) {
       return this.http.delete(API_URL + '/schedules/' + id)
-        .map((response: Response) => response.json());
+        .map((response: Response) => response.text());
   }
 
 }
