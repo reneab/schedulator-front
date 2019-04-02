@@ -3,12 +3,50 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+  <img width="100" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
 </div>
 
-<h4>Elements in DB:</h4>
-<ol>
-  <li *ngFor="let el of repData">{{el.time}}: {{el.batch}} has class in {{el.room}} with {{el.teacher}} on {{el.subject}}</li>
-</ol>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Time Slot</th>
+    <th>Batch</th>
+    <th>Teacher</th>
+    <th>Room</th>
+    <th>Subject</th>
+  </tr>
+  <tr *ngFor="let el of repData">
+    <td>{{el._id}}</td>
+    <td>{{el.time}}</td>
+    <td>{{el.batch}}</td>
+    <td>{{el.teacher}}</td>
+    <td>{{el.room}}</td>
+    <td>{{el.subject}}</td>
+    <td><button value="X" (click)="delete(el._id)">X</button></td>
+  </tr>
+</table>
+
+<h4>Add new entry:</h4>
+<form #scheduleEntry="ngForm" (ngSubmit)="onSave(scheduleEntry.value)" novalidate>
+  <input type="text" name="time" [(ngModel)]="time" placeholder="Indicate a time slot" required/>
+  <select name="batch" [(ngModel)]="batch">
+    <option value="2020-a">Class 2020 A</option>
+    <option value="2020-b">Class 2020 B</option>
+  </select>
+  <select name="teacher" [(ngModel)]="teacher">
+    <option value="jun rey">Jun Rey</option>
+    <option value="quentin">Quentin</option>
+    <option value="kenneth">Kenneth</option>
+  </select>
+  <select name="room" [(ngModel)]="room">
+    <option value="comlab-1">ComLab 1</option>
+    <option value="comlab-2">ComLab 2</option>
+  </select>
+  <input type="text" name="subject" [(ngModel)]="subject" placeholder="Subject..."/>
+  <input type="submit" value="Submit"/>
+</form>
+
+<p class="success">{{successMessage}}</p>
+<p class="error">{{errorMessage}}</p>
 
 <router-outlet></router-outlet>
