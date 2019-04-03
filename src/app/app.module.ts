@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule, MatSelectModule, MatButtonModule } from '@angular/material';
+import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule } from '@angular/material';
 import { DataService } from './data.service';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,7 +22,8 @@ import { AppComponent } from './app.component';
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
