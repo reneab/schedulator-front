@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { DataService } from './data.service';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -11,15 +11,35 @@ import { FormsModule } from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'schedulator';
   scheduleData;
-  settings;
   errorMessage;
   successMessage;
+  scheduleForm: FormGroup;
+  // empty initialization before settings arrive from back-end
+  settings = {timeslots: [], batches: [], rooms: [], teachers: []};
 
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.dataService.getAllSettings().subscribe(data => this.settings = data);
+    this.dataService.getAllSettings().subscribe(data => {
+      this.settings = data;
+      this.scheduleForm = new FormGroup({
+        time: new FormControl(this.settings.timeslots[0]),
+        batch: new FormControl(this.settings.batches[0]),
+        teacher: new FormControl(this.settings.teachers[0]),
+        room: new FormControl(this.settings.rooms[0]),
+        subject: new FormControl()
+      });
+    });
     this.refreshSchedules();
+
+    // empty initialization before settings arrive from back-end
+    this.scheduleForm = new FormGroup({
+      time: new FormControl(),
+      batch: new FormControl(),
+      teacher: new FormControl(),
+      room: new FormControl(),
+      subject: new FormControl()
+    });
   }
 
   private refreshSchedules = function() {

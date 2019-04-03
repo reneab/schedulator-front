@@ -24,23 +24,22 @@
   </tr>
 </table>
 
+<!-- Move this to a popup ultimately -->
 <h4>Add new entry:</h4>
-<form #scheduleEntry="ngForm" (ngSubmit)="onSave(scheduleEntry.value)" novalidate>
-  <input type="text" name="time" [(ngModel)]="time" placeholder="Indicate a time slot" required/>
-  <select name="batch" [(ngModel)]="batch">
-    <option value="2020-a">Class 2020 A</option>
-    <option value="2020-b">Class 2020 B</option>
+<form [formGroup]="scheduleForm" (ngSubmit)="onSave(scheduleForm.value)">
+  <select formControlName="time">
+    <option *ngFor = "let t of this.settings.timeslots" [value] = "t">{{t}}</option>
   </select>
-  <select name="teacher" [(ngModel)]="teacher">
-    <option value="jun rey">Jun Rey</option>
-    <option value="quentin">Quentin</option>
-    <option value="kenneth">Kenneth</option>
+  <select formControlName="batch">
+    <option *ngFor = "let b of this.settings.batches" [value] = "b">{{b}}</option>
   </select>
-  <select name="room" [(ngModel)]="room">
-    <option value="comlab-1">ComLab 1</option>
-    <option value="comlab-2">ComLab 2</option>
+  <select formControlName="teacher">
+      <option *ngFor = "let t of this.settings.teachers" [value] = "t">{{t}}</option>
   </select>
-  <input type="text" name="subject" [(ngModel)]="subject" placeholder="Subject..."/>
+  <select formControlName="room">
+      <option *ngFor = "let r of this.settings.rooms" [value] = "r">{{r}}</option>
+  </select>
+  <input type="text" formControlName="subject" placeholder="Subject..."/>
   <input type="submit" value="Submit"/>
 </form>
 
