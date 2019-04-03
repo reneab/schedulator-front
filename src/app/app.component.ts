@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   title = 'schedulator';
-  repData;
+  scheduleData;
   settings;
   errorMessage;
   successMessage;
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   }
 
   private refreshSchedules = function() {
-    this.dataService.getAllSchedules().subscribe(data => this.repData = data);
+    this.dataService.getAllSchedules().subscribe(data => this.scheduleData = data);
   };
 
   onSave = function(element, isValid: boolean) {
