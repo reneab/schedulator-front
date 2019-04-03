@@ -8,23 +8,19 @@
     </mat-toolbar-row>
 </mat-toolbar>
 
-<table>
-  <tr>
-    <th>Time Slot</th>
-    <th>Batch</th>
-    <th>Teacher</th>
-    <th>Room</th>
-    <th>Subject</th>
-  </tr>
-  <tr *ngFor="let el of scheduleData">
-    <td>{{el.time}}</td>
-    <td>{{el.batch}}</td>
-    <td>{{el.teacher}}</td>
-    <td>{{el.room}}</td>
-    <td>{{el.subject}}</td>
-    <td><button mat-raised-button color="warn" (click)="delete(el._id)">Delete</button></td>
-  </tr>
-</table>
+<mat-list>
+  <mat-list-item *ngFor="let t of settings.timeslots">
+    <mat-card>{{t}}</mat-card>
+      <mat-card *ngFor="let d of scheduleData | schedulefilter: 'time' : t">
+        <mat-card-header>{{d.batch}}</mat-card-header>
+        <mat-card-content>{{d.teacher}} - {{d.room}}</mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="warn" (click)="delete(d._id)">Delete</button>
+        </mat-card-actions>
+      </mat-card>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+</mat-list>
 
 <!-- Move this to a popup ultimately -->
 <h4>Add new entry:</h4>
