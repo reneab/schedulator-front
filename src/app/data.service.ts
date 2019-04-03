@@ -33,4 +33,10 @@ export class DataService {
         .map((response: Response) => response.text());
   }
 
+  // Settings
+  public getAllSettings() {
+    return this.http.get(API_URL + '/settings/all')
+      .map((response: Response) => response.json());
+}
+
 }
