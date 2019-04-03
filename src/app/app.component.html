@@ -20,27 +20,41 @@
     <td>{{el.teacher}}</td>
     <td>{{el.room}}</td>
     <td>{{el.subject}}</td>
-    <td><button value="X" (click)="delete(el._id)">X</button></td>
+    <td><button mat-raised-button color="warn" (click)="delete(el._id)">Delete</button></td>
   </tr>
 </table>
 
 <!-- Move this to a popup ultimately -->
 <h4>Add new entry:</h4>
 <form [formGroup]="scheduleForm" (ngSubmit)="onSave(scheduleForm.value)">
-  <select formControlName="time">
-    <option *ngFor = "let t of this.settings.timeslots" [value] = "t">{{t}}</option>
-  </select>
-  <select formControlName="batch">
-    <option *ngFor = "let b of this.settings.batches" [value] = "b">{{b}}</option>
-  </select>
-  <select formControlName="teacher">
-      <option *ngFor = "let t of this.settings.teachers" [value] = "t">{{t}}</option>
-  </select>
-  <select formControlName="room">
-      <option *ngFor = "let r of this.settings.rooms" [value] = "r">{{r}}</option>
-  </select>
-  <input type="text" formControlName="subject" placeholder="Subject..."/>
-  <input type="submit" value="Submit"/>
+  <mat-form-field>
+    <mat-label>Time slot</mat-label>
+    <mat-select formControlName="time">
+      <mat-option *ngFor = "let o of this.settings.timeslots" [value] = "o">{{o}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Batch</mat-label>
+    <mat-select formControlName="batch">
+      <mat-option *ngFor = "let o of this.settings.batches" [value] = "o">{{o}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Teacher</mat-label>
+    <mat-select formControlName="teacher">
+      <mat-option *ngFor = "let o of this.settings.teachers" [value] = "o">{{o}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+      <mat-label>Venue</mat-label>
+      <mat-select formControlName="room">
+        <mat-option *ngFor = "let o of this.settings.rooms" [value] = "o">{{o}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="subject" placeholder="Subject">
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>
 
 <p class="success">{{successMessage}}</p>
