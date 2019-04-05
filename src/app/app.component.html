@@ -9,15 +9,20 @@
 </mat-toolbar>
 
 <mat-list>
-  <mat-list-item *ngFor="let t of settings.timeslots">
-    <mat-card>{{t}}</mat-card>
-      <mat-card *ngFor="let d of scheduleData | schedulefilter: 'time' : t">
-        <mat-card-header>{{d.batch}}</mat-card-header>
-        <mat-card-content>{{d.teacher}} - {{d.room}}</mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="warn" (click)="delete(d._id)">Delete</button>
-        </mat-card-actions>
-      </mat-card>
+  <mat-list-item>
+    <mat-card class="header-card">Time</mat-card>
+    <mat-card class="header-card" *ngFor="let b of settings.batches">
+      <mat-card-content>{{b}}</mat-card-content>
+    </mat-card>
+  </mat-list-item>
+  <mat-list-item *ngFor="let d of scheduleData">
+    <mat-card class="schedule-card">{{d.time}}</mat-card>
+    <mat-card class="schedule-card" *ngFor="let s of d.data">
+      <mat-card-content *ngIf="s" class="schedule-taken">{{s.teacher}}: {{s.subject}} ({{s.room}})
+        <button mat-raised-button color="warn" (click)="delete(d._id)">X</button>
+      </mat-card-content>
+      <mat-card-content *ngIf="!s"></mat-card-content>
+    </mat-card>
   </mat-list-item>
   <mat-divider></mat-divider>
 </mat-list>

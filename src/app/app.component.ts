@@ -42,8 +42,19 @@ export class AppComponent implements OnInit {
     });
   }
 
+  // reformat schedule data to fit in the schedule grid
+  private formatSchedule = function(data: any[]) {
+    return this.settings.timeslots.map((t: string) => {
+      const filtered = data.filter(d => d.time === t);
+      const final = this.settings.batches.map(b => filtered.find(e => e.batch === b));
+      return {time: t,
+        data: final
+      };
+    });
+  };
+
   private refreshSchedules = function() {
-    this.dataService.getAllSchedules().subscribe(data => this.scheduleData = data);
+    this.dataService.getAllSchedules().subscribe(data => this.scheduleData = this.formatSchedule(data));
   };
 
   onSave = function(element, isValid: boolean) {
