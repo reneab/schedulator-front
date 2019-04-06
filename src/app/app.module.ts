@@ -11,11 +11,15 @@ import { DataService } from './data.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ScheduleFilterPipe } from './ScheduleFilterPipe';
+import { ScheduleTileComponent } from './schedule-tile/schedule-tile.component';
+import { EmptyTileComponent } from './empty-tile/empty-tile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ScheduleFilterPipe
+    ScheduleFilterPipe,
+    ScheduleTileComponent,
+    EmptyTileComponent
   ],
   imports: [
     BrowserModule,

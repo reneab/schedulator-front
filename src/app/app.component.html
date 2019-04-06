@@ -17,14 +17,12 @@
   </mat-list-item>
   <mat-list-item *ngFor="let d of scheduleData">
     <mat-card class="time-card">{{d.time}}</mat-card>
-    <span *ngFor="let s of d.data">
-      <mat-card class="schedule-card schedule-taken" *ngIf="s">
-        <mat-card-content>{{s.teacher}}: {{s.subject}} ({{s.room}})
-          <button mat-raised-button color="warn" (click)="delete(s.id)">X</button>
-        </mat-card-content>
-      </mat-card>
-      <mat-card *ngIf="!s"></mat-card>
-    </span>
+    <mat-card *ngFor="let s of d.data">
+      <app-schedule-tile *ngIf="s" [id]="s.id" [teacher]="s.teacher" [room]="s.room" [subject]="s.subject" 
+      (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="this.errorMessage = $event"></app-schedule-tile>
+      <app-empty-tile *ngIf="!s"></app-empty-tile>
+    </mat-card>
+
   </mat-list-item>
   <mat-divider></mat-divider>
 </mat-list>

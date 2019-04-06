@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { DataService } from './data.service';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { ScheduleEntry } from './ScheduleEntry';
@@ -54,6 +53,7 @@ export class AppComponent implements OnInit {
   };
 
   private refreshSchedules = function() {
+    console.log('Loading schedules...');
     this.dataService.getAllSchedules().subscribe(data => {
       const arr: ScheduleEntry[] = data.map(e => new ScheduleEntry(e._id, e.time, e.teacher, e.batch, e.room, e.subject));
       this.scheduleData = this.formatSchedule(arr);
@@ -69,18 +69,6 @@ export class AppComponent implements OnInit {
       this.successMessage = [];
       this.errorMessage = error._body;
     });
-  };
-
-  delete = function(id: string) {
-    this.dataService.deleteScheduleElement(id)
-    .subscribe(res => {
-      this.successMessage = res;
-      this.errorMessage = [];
-      this.refreshSchedules();
-    }, error => {
-        this.successMessage = [];
-        this.errorMessage = error._body;
-      });
   };
 
 }
