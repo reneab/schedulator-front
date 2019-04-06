@@ -25,7 +25,6 @@ export class DataService {
   public getAllSchedules() {
       return this.http.get(API_URL + '/schedules/all')
         .map((response: Response) => response.json());
-        // TODO possible to map this to a real Object directly
   }
 
   public deleteScheduleElement(id: string) {
