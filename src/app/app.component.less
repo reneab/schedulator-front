@@ -20,27 +20,28 @@ mat-form-field {
     margin-right: 12px;
 }
 
-th, td {
-  width: 150px;  
-}
+table {
+    width: 90%;
+    margin: 1% 5%;
 
-mat-card {
-    width: 110px;
+    tr {
+        height: 50px;
+        &:hover {background-color: #f5f5f5;}
+    }
 
-    &.header-card {
-        height: 20px;
+    th {
+        background-color: cadetblue;
+        color: white;
         font-weight: bold;
     }
-    
-    &.schedule-card {
-        height: 40px;
-    }
 
-    &.schedule-taken {
-        background-color: bisque;
-    }
-
-    &.time-card {
+    td, th {
         width: 110px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+
+        &.row-title {
+            text-align: left;
+        }
     }
 }

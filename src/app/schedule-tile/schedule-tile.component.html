@@ -1,3 +1,5 @@
-<mat-card-content>{{teacher}}: {{subject}} ({{room}})
-  <button mat-raised-button color="warn" (click)="delete(id)">X</button>
-</mat-card-content>
+<div>
+  <p>{{teacher}} - {{subject}}</p>
+  <i>{{room}}</i>
+  <button mat-mini-fab color="warn" (click)="delete(id)">X</button>
+</div>

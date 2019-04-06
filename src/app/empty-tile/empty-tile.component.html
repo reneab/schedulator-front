@@ -1,3 +1,4 @@
-<p>
-  Nothing yet
-</p>
+<div (mouseenter)="isHovering = true" (mouseleave)="isHovering = false">
+  <!-- Nothing yet -->
+  <button mat-mini-fab color="primary" *ngIf="isHovering">+</button>
+</div>

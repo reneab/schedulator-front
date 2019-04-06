@@ -8,26 +8,24 @@
     </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-list>
-  <mat-list-item>
-    <mat-card class="header-card">Time</mat-card>
-    <mat-card class="header-card" *ngFor="let b of settings.batches">
-      <mat-card-content>{{b}}</mat-card-content>
-    </mat-card>
-  </mat-list-item>
-  <mat-list-item *ngFor="let d of scheduleData">
-    <mat-card class="time-card">{{d.time}}</mat-card>
-    <mat-card *ngFor="let s of d.data">
+<table>
+  <tr>
+    <th>Time</th>
+    <th *ngFor="let b of settings.batches">{{b}}</th>
+  </tr>
+  <tr *ngFor="let d of scheduleData">
+    <td class="row-title">{{d.time}}</td>
+    <td *ngFor="let s of d.data">
       <app-schedule-tile *ngIf="s" [id]="s.id" [teacher]="s.teacher" [room]="s.room" [subject]="s.subject" 
-      (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="this.errorMessage = $event"></app-schedule-tile>
+        (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="this.errorMessage = $event"></app-schedule-tile>
       <app-empty-tile *ngIf="!s"></app-empty-tile>
-    </mat-card>
+    </td>
+  </tr>
+</table>
 
-  </mat-list-item>
-  <mat-divider></mat-divider>
-</mat-list>
 
 <!-- Move this to a popup ultimately -->
+<mat-divider></mat-divider>
 <h4>Add new entry:</h4>
 <form [formGroup]="scheduleForm" (ngSubmit)="onSave(scheduleForm.value)">
   <mat-form-field>

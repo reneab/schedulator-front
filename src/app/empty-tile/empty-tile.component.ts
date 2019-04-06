@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EmptyTileComponent implements OnInit {
 
+  isHovering = false;
+
   constructor() { }
 
   ngOnInit() {
