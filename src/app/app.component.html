@@ -20,7 +20,7 @@
     <span *ngFor="let s of d.data">
       <mat-card class="schedule-card schedule-taken" *ngIf="s">
         <mat-card-content>{{s.teacher}}: {{s.subject}} ({{s.room}})
-          <button mat-raised-button color="warn" (click)="delete(d._id)">X</button>
+          <button mat-raised-button color="warn" (click)="delete(s.id)">X</button>
         </mat-card-content>
       </mat-card>
       <mat-card *ngIf="!s"></mat-card>
