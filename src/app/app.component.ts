@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { DataService } from './data.service';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ScheduleEntry } from './ScheduleEntry';
 
 @Component({
   selector: 'app-root',
@@ -42,19 +43,21 @@ export class AppComponent implements OnInit {
     });
   }
 
-  // reformat schedule data to fit in the schedule grid
-  private formatSchedule = function(data: any[]) {
+  // reformat schedule data per batch, to fit in the schedule grid
+  // TODO later parametrize this one to be able to filter by teacher and room
+  private formatSchedule = function(entries: ScheduleEntry[]) {
     return this.settings.timeslots.map((t: string) => {
-      const filtered = data.filter(d => d.time === t);
+      const filtered = entries.filter(d => d.time === t);
       const final = this.settings.batches.map(b => filtered.find(e => e.batch === b));
-      return {time: t,
-        data: final
-      };
+      return {time: t, data: final};
     });
   };
 
   private refreshSchedules = function() {
-    this.dataService.getAllSchedules().subscribe(data => this.scheduleData = this.formatSchedule(data));
+    this.dataService.getAllSchedules().subscribe(data => {
+      const arr: ScheduleEntry[] = data.map(e => new ScheduleEntry(e._id, e.time, e.teacher, e.batch, e.room, e.subject));
+      this.scheduleData = this.formatSchedule(arr);
+    });
   };
 
   onSave = function(element, isValid: boolean) {
