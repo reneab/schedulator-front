@@ -1,5 +1,8 @@
-<div>
-  <p>{{teacher}} - {{subject}}</p>
+<div (mouseenter)="isHovering = true" (mouseleave)="isHovering = false">
+  <b>{{subject}}</b>
+  <p>{{teacher}}</p>
   <i>{{room}}</i>
-  <button mat-mini-fab color="warn" (click)="delete(id)">X</button>
+  <button mat-mini-fab color="warn" (click)="delete(id)" *ngIf="isHovering">
+    <i class="material-icons">delete</i>
+  </button>
 </div>

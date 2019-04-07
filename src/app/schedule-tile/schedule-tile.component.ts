@@ -16,6 +16,8 @@ export class ScheduleTileComponent implements OnInit {
   @Output() deleteSuccessEvent = new EventEmitter();
   @Output() deleteFailEvent = new EventEmitter<string>();
 
+  isHovering = false;
+
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
