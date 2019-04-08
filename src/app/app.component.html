@@ -53,9 +53,9 @@
       </mat-select>
     </mat-form-field>
   <mat-form-field>
-    <input matInput formControlName="subject" placeholder="Subject">
+    <input matInput formControlName="subject" placeholder="Subject" required>
   </mat-form-field>
-  <button mat-raised-button color="primary" type="submit">Submit</button>
+  <button mat-raised-button color="primary" type="submit" [disabled]='!scheduleForm.valid'>Submit</button>
 </form>
 
 <p class="success">{{successMessage}}</p>
