@@ -1,3 +1,36 @@
-<p>
-  Coming soon...
-</p>
+<h2 mat-dialog-title>Please fill in necessary data:</h2>
+<form [formGroup]="scheduleForm" (ngSubmit)="onSave(scheduleForm.getRawValue())">
+<mat-dialog-content>
+  <div class="form-container">
+    <mat-form-field>
+      <input matInput type="text" formControlName="time" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Batch</mat-label>
+      <mat-select formControlName="batch">
+        <mat-option *ngFor = "let o of this.settings.batches" [value] = "o">{{o}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Teacher</mat-label>
+      <mat-select formControlName="teacher">
+        <mat-option *ngFor = "let o of this.settings.teachers" [value] = "o">{{o}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Venue</mat-label>
+      <mat-select formControlName="room">
+        <mat-option *ngFor = "let o of this.settings.rooms" [value] = "o">{{o}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" formControlName="subject" placeholder="Subject" required>
+    </mat-form-field>
+  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" type="submit" [disabled]='!scheduleForm.valid'>Submit</button>
+    <button mat-button [mat-dialog-close]="saved">Close</button>
+  </mat-dialog-actions>
+</form>
+<p class="error">{{errorMessage}}</p>

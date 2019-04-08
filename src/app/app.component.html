@@ -18,47 +18,9 @@
     <td *ngFor="let s of d.data">
       <app-schedule-tile *ngIf="s" [id]="s.id" [teacher]="s.teacher" [room]="s.room" [subject]="s.subject" 
         (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="this.errorMessage = $event"></app-schedule-tile>
-      <app-empty-tile *ngIf="!s"></app-empty-tile>
+      <app-empty-tile *ngIf="!s" [settings]="settings" [timeslot]="d.time" (saveSuccessEvent)="refreshSchedules()"></app-empty-tile>
     </td>
   </tr>
 </table>
-
-
-<!-- Move this to a popup ultimately -->
-<mat-divider></mat-divider>
-<h4>Add new entry:</h4>
-<form [formGroup]="scheduleForm" (ngSubmit)="onSave(scheduleForm.value)">
-  <mat-form-field>
-    <mat-label>Time slot</mat-label>
-    <mat-select formControlName="time">
-      <mat-option *ngFor = "let o of this.settings.timeslots" [value] = "o">{{o}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Batch</mat-label>
-    <mat-select formControlName="batch">
-      <mat-option *ngFor = "let o of this.settings.batches" [value] = "o">{{o}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Teacher</mat-label>
-    <mat-select formControlName="teacher">
-      <mat-option *ngFor = "let o of this.settings.teachers" [value] = "o">{{o}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-      <mat-label>Venue</mat-label>
-      <mat-select formControlName="room">
-        <mat-option *ngFor = "let o of this.settings.rooms" [value] = "o">{{o}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  <mat-form-field>
-    <input matInput formControlName="subject" placeholder="Subject" required>
-  </mat-form-field>
-  <button mat-raised-button color="primary" type="submit" [disabled]='!scheduleForm.valid'>Submit</button>
-</form>
-
-<p class="success">{{successMessage}}</p>
-<p class="error">{{errorMessage}}</p>
 
 <router-outlet></router-outlet>

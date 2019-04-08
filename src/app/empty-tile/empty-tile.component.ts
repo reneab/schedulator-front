@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
 
@@ -9,6 +9,11 @@ import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-
 })
 export class EmptyTileComponent implements OnInit {
 
+  @Input() settings: any;
+  @Input() timeslot: string;
+
+  @Output() saveSuccessEvent = new EventEmitter();
+
   isHovering = false;
 
   constructor(public dialog: MatDialog) { }
@@ -18,13 +23,19 @@ export class EmptyTileComponent implements OnInit {
 
   openScheduleInputDialog(): void {
     const dialogRef = this.dialog.open(ScheduleInputDialogComponent, {
-      height: '100px',
-      width: '200px'
+      height: '500px',
+      width: '600px',
+      data: {
+        settings: this.settings,
+        timeslot: this.timeslot}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // TODO refresh schedules
+      if (result) {
+        this.saveSuccessEvent.emit();
+      } else {
+        console.log('The dialog was closed without saving');
+      }
     });
   }
 
