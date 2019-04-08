@@ -1,5 +1,5 @@
 <div (mouseenter)="isHovering = true" (mouseleave)="isHovering = false">
-  <button mat-mini-fab color="primary" *ngIf="isHovering">
+  <button mat-mini-fab color="primary" *ngIf="isHovering" (click)="openScheduleInputDialog()">
     <i class="material-icons">add</i>
   </button>
 </div>

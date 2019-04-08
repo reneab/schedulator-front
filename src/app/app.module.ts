@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule, 
-  MatListModule, MatCardModule, MatDividerModule } from '@angular/material';
+import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
+  MatListModule, MatCardModule, MatDividerModule, MatDialogModule } from '@angular/material';
 import { DataService } from './data.service';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -13,13 +13,15 @@ import { AppComponent } from './app.component';
 import { ScheduleFilterPipe } from './ScheduleFilterPipe';
 import { ScheduleTileComponent } from './schedule-tile/schedule-tile.component';
 import { EmptyTileComponent } from './empty-tile/empty-tile.component';
+import { ScheduleInputDialogComponent } from './schedule-input-dialog/schedule-input-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ScheduleFilterPipe,
     ScheduleTileComponent,
-    EmptyTileComponent
+    EmptyTileComponent,
+    ScheduleInputDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -33,8 +35,10 @@ import { EmptyTileComponent } from './empty-tile/empty-tile.component';
     MatToolbarModule,
     MatListModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule
   ],
+  entryComponents: [ScheduleInputDialogComponent],
   providers: [DataService],
   bootstrap: [AppComponent]
 })
