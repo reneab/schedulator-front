@@ -9,18 +9,6 @@
 </mat-toolbar>
 
 <mat-form-field class="chip-list">
-  <mat-chip-list #batchList>
-    <mat-chip *ngFor="let el of settings.batches" removable (removed)="remove(el, 'batches')">
-      {{el}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input placeholder="Batches"
-            [matChipInputFor]="batchList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event, 'batches')">
-  </mat-chip-list>
-</mat-form-field>
-<mat-form-field class="chip-list">
   <mat-chip-list #teacherList>
     <mat-chip *ngFor="let el of settings.teachers" removable (removed)="remove(el, 'teachers')">
       {{el}}
@@ -42,6 +30,18 @@
             [matChipInputFor]="roomList"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             (matChipInputTokenEnd)="add($event, 'rooms')">
+  </mat-chip-list>
+</mat-form-field>
+<mat-form-field class="chip-list">
+  <mat-chip-list #batchList>
+    <mat-chip *ngFor="let el of settings.batches" removable (removed)="remove(el, 'batches')">
+      {{el}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Batches"
+            [matChipInputFor]="batchList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event, 'batches')">
   </mat-chip-list>
 </mat-form-field>
 <mat-form-field class="chip-list">
