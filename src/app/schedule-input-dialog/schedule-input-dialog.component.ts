@@ -14,6 +14,7 @@ export class ScheduleInputDialogComponent implements OnInit {
   scheduleForm: FormGroup;
   settings: any;
   timeslot: string;
+  batch: string;
   errorMessage: string;
   saved = false;
 
@@ -22,6 +23,7 @@ export class ScheduleInputDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.settings = data.settings;
     this.timeslot = data.timeslot;
+    this.batch = data.batch;
   }
 
   onNoClick(): void {
@@ -30,8 +32,8 @@ export class ScheduleInputDialogComponent implements OnInit {
 
   ngOnInit() {
     this.scheduleForm = new FormGroup({
-      time: new FormControl({value: this.timeslot, disabled: true}, Validators.required),
-      batch: new FormControl(this.settings.batches[0]),
+      time: new FormControl({value: this.timeslot, disabled: true}),
+      batch: new FormControl({value: this.batch, disabled: true}),
       teacher: new FormControl(this.settings.teachers[0]),
       room: new FormControl(this.settings.rooms[0]),
       subject: new FormControl('', Validators.required)

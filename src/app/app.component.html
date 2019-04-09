@@ -15,10 +15,10 @@
   </tr>
   <tr *ngFor="let d of scheduleData">
     <td class="row-title">{{d.time}}</td>
-    <td *ngFor="let s of d.data">
+    <td *ngFor="let s of d.data; let i = index">
       <app-schedule-tile *ngIf="s" [id]="s.id" [teacher]="s.teacher" [room]="s.room" [subject]="s.subject" 
         (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="this.errorMessage = $event"></app-schedule-tile>
-      <app-empty-tile *ngIf="!s" [settings]="settings" [timeslot]="d.time" (saveSuccessEvent)="refreshSchedules()"></app-empty-tile>
+      <app-empty-tile *ngIf="!s" [settings]="settings" [timeslot]="d.time" [batch]="settings.batches[i]" (saveSuccessEvent)="refreshSchedules()"></app-empty-tile>
     </td>
   </tr>
 </table>

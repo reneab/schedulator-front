@@ -11,6 +11,7 @@ export class EmptyTileComponent implements OnInit {
 
   @Input() settings: any;
   @Input() timeslot: string;
+  @Input() batch: string;
 
   @Output() saveSuccessEvent = new EventEmitter();
 
@@ -27,7 +28,9 @@ export class EmptyTileComponent implements OnInit {
       width: '600px',
       data: {
         settings: this.settings,
-        timeslot: this.timeslot}
+        timeslot: this.timeslot,
+        batch: this.batch
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
