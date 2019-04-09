@@ -14,6 +14,7 @@ import { ScheduleFilterPipe } from './ScheduleFilterPipe';
 import { ScheduleTileComponent } from './schedule-tile/schedule-tile.component';
 import { EmptyTileComponent } from './empty-tile/empty-tile.component';
 import { ScheduleInputDialogComponent } from './schedule-input-dialog/schedule-input-dialog.component';
+import { ErrorMessageDialogComponent } from './error-message-dialog/error-message-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ScheduleInputDialogComponent } from './schedule-input-dialog/schedule-i
     ScheduleFilterPipe,
     ScheduleTileComponent,
     EmptyTileComponent,
-    ScheduleInputDialogComponent
+    ScheduleInputDialogComponent,
+    ErrorMessageDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,7 @@ import { ScheduleInputDialogComponent } from './schedule-input-dialog/schedule-i
     MatDialogModule,
     MatTooltipModule
   ],
-  entryComponents: [ScheduleInputDialogComponent],
+  entryComponents: [ScheduleInputDialogComponent, ErrorMessageDialogComponent],
   providers: [DataService],
   bootstrap: [AppComponent]
 })

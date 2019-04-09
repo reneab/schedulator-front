@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from './data.service';
 import { ScheduleEntry } from './ScheduleEntry';
+import { MatDialog } from '@angular/material';
+import { ErrorMessageDialogComponent } from './error-message-dialog/error-message-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,7 @@ export class AppComponent implements OnInit {
   // empty initialization before settings arrive from back-end
   settings = {timeslots: [], batches: [], rooms: [], teachers: []};
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.dataService.getAllSettings().subscribe(data => {
@@ -40,4 +42,11 @@ export class AppComponent implements OnInit {
     });
   };
 
+  openErrorDialog(message: string): void {
+    this.dialog.open(ErrorMessageDialogComponent, {
+      height: '180px',
+      width: '350px',
+      data: {errorMessage: message}
+    });
+  }
 }
