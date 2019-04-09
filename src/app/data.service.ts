@@ -36,6 +36,10 @@ export class DataService {
   public getAllSettings() {
     return this.http.get(API_URL + '/settings/all')
       .map((response: Response) => response.json());
-}
+  }
 
+  public saveSettings(settings) {
+    return this.http.post(API_URL + '/settings/save', settings)
+      .map((response: Response) => response.text());
+  }
 }

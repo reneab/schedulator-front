@@ -11,6 +11,9 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 })
 export class SettingsComponent implements OnInit {
 
+  changed = false; // used for disabling Save button
+  saved = false; // used for displaying success icon
+  errorMessage: string;
   settings = {timeslots: [], batches: [], rooms: [], teachers: []};
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -24,7 +27,16 @@ export class SettingsComponent implements OnInit {
   }
 
   private saveSettings(): void {
-    // push all to DB, then reload settings
+    this.dataService.saveSettings(this.settings).subscribe(res => {
+      console.log(res);
+      this.changed = false;
+      this.errorMessage = null;
+      this.saved = true;
+    }, error => {
+      const message = error._body;
+      console.log('Error: ' + message);
+      this.errorMessage = message;
+    });
   }
 
   ngOnInit(): void {
@@ -36,6 +48,8 @@ export class SettingsComponent implements OnInit {
     const index = this.settings[settingName].indexOf(el);
     if (index >= 0) {
       this.settings[settingName].splice(index, 1);
+      this.changed = true;
+      this.saved = false;
     }
   }
 
@@ -47,6 +61,8 @@ export class SettingsComponent implements OnInit {
     if ((value || '').trim()) {
       console.log('Adding ' + value + ' to setting ' + settingName);
       this.settings[settingName].push(value.trim());
+      this.changed = true;
+      this.saved = false;
     }
 
     // Reset the input value
