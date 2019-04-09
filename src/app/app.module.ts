@@ -15,6 +15,14 @@ import { ScheduleTileComponent } from './schedule-tile/schedule-tile.component';
 import { EmptyTileComponent } from './empty-tile/empty-tile.component';
 import { ScheduleInputDialogComponent } from './schedule-input-dialog/schedule-input-dialog.component';
 import { ErrorMessageDialogComponent } from './error-message-dialog/error-message-dialog.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ScheduleTableComponent } from './schedule-table/schedule-table.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const appRoutes: Routes = [
+  { path: '', component: ScheduleTableComponent },
+  { path: 'settings', component: SettingsComponent }
+];
 
 @NgModule({
   declarations: [
@@ -23,12 +31,15 @@ import { ErrorMessageDialogComponent } from './error-message-dialog/error-messag
     ScheduleTileComponent,
     EmptyTileComponent,
     ScheduleInputDialogComponent,
-    ErrorMessageDialogComponent
+    ErrorMessageDialogComponent,
+    SettingsComponent,
+    ScheduleTableComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    RouterModule.forRoot(appRoutes),
     HttpModule,
     ReactiveFormsModule,
     MatInputModule,
