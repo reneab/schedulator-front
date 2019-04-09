@@ -3,8 +3,9 @@
     <h3>Settings</h3>
     <span class="spacer"></span>
     <p class="error">{{errorMessage}}</p>
-    <mat-icon *ngIf="saved">check_circle</mat-icon>
+    <mat-icon class="success" *ngIf="saved">check_circle</mat-icon>
     <button mat-raised-button color="warn" [disabled]='!changed' (click)="saveSettings()">Save</button>  
+    <button mat-raised-button color="primary" [routerLink]="['/']">Home</button>  
   </mat-toolbar-row>
 </mat-toolbar>
 
