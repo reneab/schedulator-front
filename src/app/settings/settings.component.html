@@ -1,3 +1,51 @@
-<p>
-  settings works!
-</p>
+<h3>
+  Settings
+</h3>
+<mat-form-field class="chip-list">
+  <mat-chip-list #batchList>
+    <mat-chip *ngFor="let el of settings.batches" removable (removed)="remove(el, 'batches')">
+      {{el}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Batches"
+            [matChipInputFor]="batchList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event, 'batches')">
+  </mat-chip-list>
+</mat-form-field>
+<mat-form-field class="chip-list">
+  <mat-chip-list #teacherList>
+    <mat-chip *ngFor="let el of settings.teachers" removable (removed)="remove(el, 'teachers')">
+      {{el}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Teachers"
+            [matChipInputFor]="teacherList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event, 'teachers')">
+  </mat-chip-list>
+</mat-form-field>
+<mat-form-field class="chip-list">
+  <mat-chip-list #roomList>
+    <mat-chip *ngFor="let el of settings.rooms" removable (removed)="remove(el, 'rooms')">
+      {{el}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Venues"
+            [matChipInputFor]="roomList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event, 'rooms')">
+  </mat-chip-list>
+</mat-form-field>
+<mat-form-field class="chip-list">
+  <mat-chip-list #timeslotList>
+    <mat-chip *ngFor="let el of settings.timeslots" removable (removed)="remove(el, 'timeslots')">
+      {{el}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Time Slots"
+            [matChipInputFor]="timeslotList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event, 'timeslots')">
+  </mat-chip-list>
+</mat-form-field>

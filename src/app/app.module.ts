@@ -5,7 +5,8 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
-  MatListModule, MatCardModule, MatDividerModule, MatDialogModule, MatTooltipModule } from '@angular/material';
+  MatListModule, MatCardModule, MatDividerModule, MatDialogModule, MatTooltipModule, 
+  MatChipsModule, MatIconModule } from '@angular/material';
 import { DataService } from './data.service';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -50,7 +51,9 @@ const appRoutes: Routes = [
     MatCardModule,
     MatDividerModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule,
+    MatIconModule
   ],
   entryComponents: [ScheduleInputDialogComponent, ErrorMessageDialogComponent],
   providers: [DataService],
