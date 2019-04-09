@@ -12,8 +12,10 @@ import { ScheduleEntry } from '../ScheduleEntry';
 export class ScheduleTableComponent implements OnInit {
 
   title = 'schedulator';
-  scheduleData: any;
-  // empty initialization before settings arrive from back-end
+  // empty initialization before data arrives from back-end
+  dataPerBatch = [];
+  dataPerTeacher = [];
+  dataPerRoom = [];
   settings = {timeslots: [], batches: [], rooms: [], teachers: []};
 
   constructor(private dataService: DataService, public dialog: MatDialog) { }
@@ -25,12 +27,11 @@ export class ScheduleTableComponent implements OnInit {
     this.refreshSchedules();
   }
 
-  // reformat schedule data per batch, to fit in the schedule grid
-  // TODO later parametrize this one to be able to filter by teacher and room
-  private formatSchedule = function(entries: ScheduleEntry[]) {
+  // reformat schedule data according to a certain setting parameter to be displayed in column (batch, teacher or room)
+  private formatSchedule = function(rawData: ScheduleEntry[], settingAsCol: string, scheduleAttribute: string) {
     return this.settings.timeslots.map((t: string) => {
-      const filtered = entries.filter(d => d.time === t);
-      const final = this.settings.batches.map(b => filtered.find(e => e.batch === b));
+      const filtered = rawData.filter(d => d.time === t);
+      const final = this.settings[settingAsCol].map(b => filtered.find(e => e[scheduleAttribute] === b));
       return {time: t, data: final};
     });
   };
@@ -38,8 +39,11 @@ export class ScheduleTableComponent implements OnInit {
   private refreshSchedules = function() {
     console.log('Loading schedules...');
     this.dataService.getAllSchedules().subscribe(data => {
-      const arr: ScheduleEntry[] = data.map(e => new ScheduleEntry(e._id, e.time, e.teacher, e.batch, e.room, e.subject));
-      this.scheduleData = this.formatSchedule(arr);
+      const rawData = data.map(e => new ScheduleEntry(e._id, e.time, e.teacher, e.batch, e.room, e.subject));
+      // TODO improve this one to make it more generic
+      this.dataPerBatch = this.formatSchedule(rawData, 'batches', 'batch');
+      this.dataPerTeacher = this.formatSchedule(rawData, 'teachers', 'teacher');
+      this.dataPerRoom = this.formatSchedule(rawData, 'rooms', 'room');
     });
   };
 

@@ -1,7 +1,7 @@
 <div (mouseenter)="isHovering = true" (mouseleave)="isHovering = false">
-  <b>{{subject}}</b>
-  <p>{{teacher}}</p>
-  <i>{{room}}</i>
+  <b>{{top}}</b>
+  <p>{{middle}}</p>
+  <i>{{bottom}}</i>
   <button mat-mini-fab color="warn" (click)="delete(id)" *ngIf="isHovering" matTooltip="Delete entry">
     <i class="material-icons">delete</i>
   </button>

@@ -8,10 +8,11 @@ import { DataService } from '../data.service';
 })
 export class ScheduleTileComponent implements OnInit {
 
-  @Input() id: string;
-  @Input() room: string;
-  @Input() teacher: string;
-  @Input() subject: string;
+  @Input() id: string; // of the schedule entry
+  // attributes to be displayed in the top, middle and bottom of the tile
+  @Input() top: string;
+  @Input() middle: string;
+  @Input() bottom: string;
 
   @Output() deleteSuccessEvent = new EventEmitter();
   @Output() deleteFailEvent = new EventEmitter<string>();
