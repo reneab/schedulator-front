@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
-  MatListModule, MatCardModule, MatDividerModule, MatDialogModule } from '@angular/material';
+  MatListModule, MatCardModule, MatDividerModule, MatDialogModule, MatTooltipModule } from '@angular/material';
 import { DataService } from './data.service';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -36,7 +36,8 @@ import { ScheduleInputDialogComponent } from './schedule-input-dialog/schedule-i
     MatListModule,
     MatCardModule,
     MatDividerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   entryComponents: [ScheduleInputDialogComponent],
   providers: [DataService],

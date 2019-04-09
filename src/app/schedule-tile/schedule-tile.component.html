@@ -2,7 +2,7 @@
   <b>{{subject}}</b>
   <p>{{teacher}}</p>
   <i>{{room}}</i>
-  <button mat-mini-fab color="warn" (click)="delete(id)" *ngIf="isHovering">
+  <button mat-mini-fab color="warn" (click)="delete(id)" *ngIf="isHovering" matTooltip="Delete entry">
     <i class="material-icons">delete</i>
   </button>
 </div>
