@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  private saveSettings(): void {
+  saveSettings(): void {
     this.dataService.saveSettings(this.settings).subscribe(res => {
       console.log(res);
       this.changed = false;
