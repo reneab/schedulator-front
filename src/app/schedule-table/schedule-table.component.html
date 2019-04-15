@@ -11,7 +11,7 @@
       <tr *ngFor="let d of dataPerBatch">
         <td class="row-title">{{d.time}}</td>
         <td *ngFor="let s of d.data; let i = index">
-          <app-schedule-tile *ngIf="s" [id]="s.id" [top]="s.teacher" [middle]="s.subject" [bottom]="s.room" 
+          <app-schedule-tile *ngIf="s" [id]="s.id" [top]="s.subject" [middle]="s.teacher" [bottom]="s.room" 
               (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="openErrorDialog($event)"></app-schedule-tile>
           <app-empty-tile *ngIf="!s" [settings]="settings" [timeslot]="d.time" [batch]="settings.batches[i]" 
               (saveSuccessEvent)="refreshSchedules()"></app-empty-tile>
