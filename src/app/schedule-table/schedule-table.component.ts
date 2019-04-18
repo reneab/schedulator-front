@@ -13,9 +13,6 @@ export class ScheduleTableComponent implements OnInit {
 
   title = 'schedulator';
   // empty initialization before data arrives from back-end
-  dataPerBatch = [];
-  dataPerTeacher = [];
-  dataPerRoom = [];
   settings = {timeslots: [], batches: [], rooms: [], teachers: []};
 
   constructor(private dataService: DataService, public dialog: MatDialog) { }
@@ -32,9 +29,9 @@ export class ScheduleTableComponent implements OnInit {
   // reformat schedule data according to a certain setting parameter to be displayed in column (batch, teacher or room)
   private formatSchedule = function(rawData: ScheduleEntry[], settingAsCol: string, scheduleAttribute: string) {
     return this.settings.timeslots.map((t: string) => {
-      const filtered = rawData.filter(d => d.time === t);
-      const final = this.settings[settingAsCol].map(b => filtered.find(e => e[scheduleAttribute] === b));
-      return {time: t, data: final};
+      const byTimeSlot = rawData.filter(d => d.time === t);
+      const completeArray = this.settings[settingAsCol].map(col => byTimeSlot.find(e => e[scheduleAttribute] === col));
+      return {time: t, entries: completeArray};
     });
   };
 
@@ -44,6 +41,7 @@ export class ScheduleTableComponent implements OnInit {
       console.log('Done!');
       const rawData = data.map(e => new ScheduleEntry(e._id, e.time, e.teacher, e.batch, e.room, e.subject));
       // TODO improve this one to make it more generic
+      // and to load only the necessary one per tab
       this.dataPerBatch = this.formatSchedule(rawData, 'batches', 'batch');
       this.dataPerTeacher = this.formatSchedule(rawData, 'teachers', 'teacher');
       this.dataPerRoom = this.formatSchedule(rawData, 'rooms', 'room');
