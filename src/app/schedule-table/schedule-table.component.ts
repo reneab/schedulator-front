@@ -21,7 +21,9 @@ export class ScheduleTableComponent implements OnInit {
   constructor(private dataService: DataService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    console.log('Loading settings...');
     this.dataService.getAllSettings().subscribe(data => {
+      console.log('Done!');
       this.settings = data;
     });
     this.refreshSchedules();
@@ -39,6 +41,7 @@ export class ScheduleTableComponent implements OnInit {
   private refreshSchedules = function() {
     console.log('Loading schedules...');
     this.dataService.getAllSchedules().subscribe(data => {
+      console.log('Done!');
       const rawData = data.map(e => new ScheduleEntry(e._id, e.time, e.teacher, e.batch, e.room, e.subject));
       // TODO improve this one to make it more generic
       this.dataPerBatch = this.formatSchedule(rawData, 'batches', 'batch');
