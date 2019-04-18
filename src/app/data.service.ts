@@ -17,9 +17,14 @@ export class DataService {
   constructor(private http: Http) { }
 
 
-  public saveScheduleElement(element) {
-    return this.http.post(API_URL + '/schedules/save', element)
-    .map((response: Response) => response.text());
+  public saveScheduleElement(element, id?: string) {
+    if (id) {
+      return this.http.post(API_URL + '/schedules/update/' + id, element)
+        .map((response: Response) => response.text());
+    } else {
+      return this.http.post(API_URL + '/schedules/save', element)
+        .map((response: Response) => response.text());
+    }
   }
 
   public getAllSchedules() {
