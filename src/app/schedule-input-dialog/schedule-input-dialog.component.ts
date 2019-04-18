@@ -3,6 +3,8 @@ import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import { DataService } from '../data.service';
+import { ScheduleEntry } from '../ScheduleEntry';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-schedule-input-dialog',
@@ -11,19 +13,18 @@ import { DataService } from '../data.service';
 })
 export class ScheduleInputDialogComponent implements OnInit {
 
+  editingMode: boolean;
   scheduleForm: FormGroup;
   settings: any;
-  timeslot: string;
-  batch: string;
+  entry: ScheduleEntry;
   errorMessage: string;
-  saved = false;
 
   constructor(public dialogRef: MatDialogRef<ScheduleInputDialogComponent>,
               private dataService: DataService,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.settings = data.settings;
-    this.timeslot = data.timeslot;
-    this.batch = data.batch;
+    this.editingMode = data.editing;
+    this.entry = data.entry;
   }
 
   onNoClick(): void {
@@ -32,23 +33,36 @@ export class ScheduleInputDialogComponent implements OnInit {
 
   ngOnInit() {
     this.scheduleForm = new FormGroup({
-      time: new FormControl({value: this.timeslot, disabled: true}),
-      batch: new FormControl({value: this.batch, disabled: true}),
-      teacher: new FormControl(this.settings.teachers[0]),
-      room: new FormControl(this.settings.rooms[0]),
-      subject: new FormControl('', Validators.required)
+      time: new FormControl({value: this.entry.time, disabled: !this.editingMode}, Validators.required),
+      batch: new FormControl({value: this.entry.batch, disabled: !this.editingMode}, Validators.required),
+      teacher: new FormControl(this.entry.teacher || this.settings.teachers[0], Validators.required),
+      room: new FormControl(this.entry.room || this.settings.rooms[0], Validators.required),
+      subject: new FormControl(this.entry.subject, Validators.required)
     });
   }
 
-  onSave = function(element) {
+  save = function(element) {
     console.log('Saving ' + JSON.stringify(element));
-    this.dataService.saveScheduleElement(element).subscribe(res => {
+    if (this.editingMode) {
+      this.handleBackEndRequest(this.dataService.saveScheduleElement(element, this.entry.id));
+    } else {
+      this.handleBackEndRequest(this.dataService.saveScheduleElement(element));
+    }
+  };
+
+  delete = function() {
+    console.log('Deleting entry with ID: ' + this.entry.id);
+    this.handleBackEndRequest(this.dataService.deleteScheduleElement(this.entry.id));
+  };
+
+  private handleBackEndRequest = function(obs: Observable<string>) {
+    obs.subscribe(res => {
       console.log(res);
-      this.saved = true;
       this.dialogRef.close(true);
     }, error => {
-      this.saved = false;
-      this.errorMessage = error._body;
+      const message = error._body;
+      console.log(message);
+      this.errorMessage = message;
     });
   };
 

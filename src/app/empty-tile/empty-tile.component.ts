@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
+import { ScheduleEntry } from '../ScheduleEntry';
 
 @Component({
   selector: 'app-empty-tile',
@@ -28,8 +29,8 @@ export class EmptyTileComponent implements OnInit {
       width: '600px',
       data: {
         settings: this.settings,
-        timeslot: this.timeslot,
-        batch: this.batch
+        editing: false,
+        entry: new ScheduleEntry(null, this.timeslot, null, this.batch, null, null)
       }
     });
 
@@ -37,7 +38,7 @@ export class EmptyTileComponent implements OnInit {
       if (result) {
         this.saveSuccessEvent.emit();
       } else {
-        console.log('The dialog was closed without saving');
+        console.log('Input dialog was closed without saving');
       }
     });
   }

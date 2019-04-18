@@ -10,10 +10,10 @@
     <tbody>
       <tr *ngFor="let d of dataPerBatch">
         <td class="row-title">{{d.time}}</td>
-        <td *ngFor="let s of d.data; let i = index">
-          <app-schedule-tile *ngIf="s" [id]="s.id" [top]="s.subject" [middle]="s.teacher" [bottom]="s.room" 
-              (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="openErrorDialog($event)"></app-schedule-tile>
-          <app-empty-tile *ngIf="!s" [settings]="settings" [timeslot]="d.time" [batch]="settings.batches[i]" 
+        <td *ngFor="let e of d.entries; let i = index">
+          <app-schedule-tile *ngIf="e" [settings]="settings" [entry]="e" [top]="e.subject" [middle]="e.teacher" [bottom]="e.room" 
+            (saveSuccessEvent)="refreshSchedules()"></app-schedule-tile>
+          <app-empty-tile *ngIf="!e" [settings]="settings" [timeslot]="d.time" [batch]="settings.batches[i]" 
               (saveSuccessEvent)="refreshSchedules()"></app-empty-tile>
           </td>
         </tr>
@@ -32,10 +32,10 @@
       <tbody>
         <tr *ngFor="let d of dataPerTeacher">
           <td class="row-title">{{d.time}}</td>
-          <td *ngFor="let s of d.data; let i = index">
-            <app-schedule-tile *ngIf="s" [id]="s.id" [top]="s.batch" [middle]="s.subject" [bottom]="s.room" 
-              (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="openErrorDialog($event)"></app-schedule-tile> 
-            <div *ngIf="!s"></div>
+          <td *ngFor="let e of d.entries">
+            <app-schedule-tile *ngIf="e" [settings]="settings" [entry]="e" [top]="e.batch" [middle]="e.subject" [bottom]="e.room" 
+              (saveSuccessEvent)="refreshSchedules()"></app-schedule-tile> 
+            <div *ngIf="!e"></div>
           </td>
         </tr>
       </tbody>
@@ -47,16 +47,16 @@
       <thead>
         <tr>
           <th>Time</th>
-          <th *ngFor="let t of settings.rooms">{{t}}</th>
+          <th *ngFor="let r of settings.rooms">{{r}}</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let d of dataPerRoom">
           <td class="row-title">{{d.time}}</td>
-          <td *ngFor="let s of d.data; let i = index">
-            <app-schedule-tile *ngIf="s" [id]="s.id" [top]="s.batch" [middle]="s.teacher" [bottom]="s.subject" 
-              (deleteSuccessEvent)="refreshSchedules()" (deleteFailEvent)="openErrorDialog($event)"></app-schedule-tile>
-            <div *ngIf="!s"></div>
+          <td *ngFor="let e of d.entries">
+            <app-schedule-tile *ngIf="e" [settings]="settings" [entry]="e" [top]="e.batch" [middle]="e.teacher" [bottom]="e.subject" 
+              (saveSuccessEvent)="refreshSchedules()"></app-schedule-tile>
+            <div *ngIf="!e"></div>
           </td>
         </tr>
       </tbody>
