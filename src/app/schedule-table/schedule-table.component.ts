@@ -14,6 +14,9 @@ export class ScheduleTableComponent implements OnInit {
 
   title = 'schedulator';
   // empty initialization before data arrives from back-end
+  dataPerBatch = [];
+  dataPerTeacher = [];
+  dataPerRoom = [];
   settings = {timeslots: [], batches: [], rooms: [], teachers: []};
 
   constructor(private dataService: DataService, public dialog: MatDialog) { }
