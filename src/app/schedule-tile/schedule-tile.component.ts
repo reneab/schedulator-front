@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { DataService } from '../data.service';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
 import { ScheduleEntry } from '../ScheduleEntry';
