@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { DataService } from '../data.service';
 import { MatDialog } from '@angular/material';
 import { ErrorMessageDialogComponent } from '../error-message-dialog/error-message-dialog.component';
@@ -7,7 +7,8 @@ import { ScheduleEntry } from '../ScheduleEntry';
 @Component({
   selector: 'app-schedule-table',
   templateUrl: './schedule-table.component.html',
-  styleUrls: ['./schedule-table.component.less']
+  styleUrls: ['./schedule-table.component.less'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ScheduleTableComponent implements OnInit {
 
