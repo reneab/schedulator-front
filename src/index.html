@@ -11,5 +11,27 @@
 </head>
 <body>
   <app-root></app-root>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#config-web-app -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAX2Qgm27HmSNIbmfLyJ5ATpadX9efupiU",
+      authDomain: "schedule-master-80cba.firebaseapp.com",
+      databaseURL: "https://schedule-master-80cba.firebaseio.com",
+      projectId: "schedule-master-80cba",
+      storageBucket: "",
+      messagingSenderId: "745655924757",
+      appId: "1:745655924757:web:8bb14795b48de9b1"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
 </body>
 </html>

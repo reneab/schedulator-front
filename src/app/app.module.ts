@@ -19,6 +19,10 @@ import { SettingsComponent } from './settings/settings.component';
 import { ScheduleTableComponent } from './schedule-table/schedule-table.component';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
+
 const appRoutes: Routes = [
   { path: '', component: ScheduleTableComponent },
   { path: 'settings', component: SettingsComponent }
@@ -41,6 +45,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     HttpModule,
     ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,

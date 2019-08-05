@@ -5,7 +5,14 @@
 export const environment = {
   production: false,
   VERSION: require('../../package.json').version,
-  apiUrl: 'http://localhost:3000'
+  firebase: {
+    apiKey: 'AIzaSyAX2Qgm27HmSNIbmfLyJ5ATpadX9efupiU',
+    authDomain: 'schedule-master-80cba.firebaseapp.com',
+    databaseURL: 'https://schedule-master-80cba.firebaseio.com',
+    projectId: 'schedule-master-80cba',
+    storageBucket: '',
+    messagingSenderId: '745655924757',
+  }
 };
 
 /*
