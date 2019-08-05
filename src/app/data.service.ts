@@ -6,7 +6,8 @@ import 'rxjs/add/operator/do';
 
 import { environment } from '../environments/environment';
 
-const API_URL = environment.apiUrl;
+// const API_URL = environment.apiUrl;
+const API_URL = "no more";
 
 @Injectable({
   providedIn: 'root'

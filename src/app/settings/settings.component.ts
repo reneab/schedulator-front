@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
 import {MatChipInputEvent, MatIconRegistry} from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -14,21 +16,23 @@ export class SettingsComponent implements OnInit {
   changed = false; // used for disabling Save button
   saved = false; // used for displaying success icon
   errorMessage: string;
+
+  settingsDoc: AngularFirestoreDocument<any>;
   settings = {timeslots: [], batches: [], rooms: [], teachers: []};
+
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  constructor(private dataService: DataService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-  }
-
-  private loadSettings(): void {
-    this.dataService.getAllSettings().subscribe(data => {
-      this.settings = data;
+  constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    this.settingsDoc = db.collection('settings').doc('v1');
+    this.settingsDoc.valueChanges().subscribe( doc => {
+      console.log(doc);
+      this.settings = doc;
     });
   }
 
   saveSettings(): void {
-    this.dataService.saveSettings(this.settings).subscribe(res => {
-      console.log(res);
+    this.settingsDoc.update(this.settings).then(res => {
+      console.log('Success');
       this.changed = false;
       this.errorMessage = null;
       this.saved = true;
@@ -40,7 +44,6 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadSettings();
   }
 
   remove(el: string, settingName: string): void {

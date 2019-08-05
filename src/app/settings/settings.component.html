@@ -45,15 +45,3 @@
             (matChipInputTokenEnd)="add($event, 'batches')">
   </mat-chip-list>
 </mat-form-field>
-<mat-form-field class="chip-list">
-  <mat-chip-list #timeslotList>
-    <mat-chip *ngFor="let el of settings.timeslots" removable (removed)="remove(el, 'timeslots')">
-      {{el}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input placeholder="Time Slots"
-            [matChipInputFor]="timeslotList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event, 'timeslots')">
-  </mat-chip-list>
-</mat-form-field>
