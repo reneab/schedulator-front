@@ -6,15 +6,15 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
+const collectionName = 'settings';
+const docName = 'main';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.less']
 })
 export class SettingsComponent implements OnInit {
-
-  collectionName = 'settings';
-  docName = 'main';
 
   changed = false; // used for disabling Save button
   saved = false; // used for displaying success icon
@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    this.settingsDoc = db.collection(this.collectionName).doc(this.docName);
+    this.settingsDoc = db.collection(collectionName).doc(docName);
     this.settingsDoc.valueChanges().subscribe( doc => {
       console.log(doc);
       this.settings = doc;
