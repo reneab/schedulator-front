@@ -10,3 +10,9 @@ export const environment = {
     messagingSenderId: '745655924757',
   }
 };
+
+export const database = {
+  settingsCollection: 'settings',
+  settingsDocument: 'prod',
+  schedulesCollection: 'schedules'
+};

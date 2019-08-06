@@ -4,9 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-
-const collectionName = 'settings';
-const docName = 'main';
+import { database } from 'src/environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -20,12 +18,12 @@ export class SettingsComponent implements OnInit {
   errorMessage: string;
 
   settingsDoc: AngularFirestoreDocument<any>;
-  settings = {timeslots: [], batches: [], rooms: [], teachers: []};
+  settings: any = {};
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    this.settingsDoc = db.collection(collectionName).doc(docName);
+    this.settingsDoc = db.collection(database.settingsCollection).doc(database.settingsDocument);
     this.settingsDoc.valueChanges().subscribe( doc => {
       console.log(doc);
       this.settings = doc;
