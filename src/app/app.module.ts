@@ -19,9 +19,13 @@ import { SettingsComponent } from './settings/settings.component';
 import { ScheduleTableComponent } from './schedule-table/schedule-table.component';
 import { RouterModule, Routes } from '@angular/router';
 
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
+import { CalendarComponent } from './calendar/calendar.component';
 
 const appRoutes: Routes = [
   { path: '', component: ScheduleTableComponent },
@@ -36,7 +40,8 @@ const appRoutes: Routes = [
     ScheduleInputDialogComponent,
     ErrorMessageDialogComponent,
     SettingsComponent,
-    ScheduleTableComponent
+    ScheduleTableComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,
@@ -47,6 +52,10 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     MatInputModule,
     MatSelectModule,
     MatButtonModule,

@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+/* for angular calendar */
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+.error {
+  color: #D50000;
+}
+.success {
+  color: #43A047;
+}
+body {
+  margin: 0;
+  font-family: 'Helvetica';
+  overflow-x: hidden;
+}

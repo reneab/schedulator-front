@@ -1,65 +1,17 @@
 <mat-tab-group mat-align-tabs="center">
   <mat-tab label="Batches calendar">
-    <table>
-      <thead>
-        <tr>
-        <th></th>
-        <th *ngFor="let b of settings.batches">{{b}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let d of dataPerBatch">
-        <td class="row-title">{{d.time}}</td>
-        <td *ngFor="let e of d.entries; let i = index">
-          <app-schedule-tile *ngIf="e" [settings]="settings" [entry]="e" [top]="e.subject" [middle]="e.teacher" [bottom]="e.room" 
-            (saveSuccessEvent)="refreshSchedules()"></app-schedule-tile>
-          <app-empty-tile *ngIf="!e" [settings]="settings" [timeslot]="d.time" [batch]="settings.batches[i]" 
-              (saveSuccessEvent)="refreshSchedules()"></app-empty-tile>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </mat-tab>
-
-  <mat-tab label="Teachers calendar">
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th *ngFor="let t of settings.teachers">{{t}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let d of dataPerTeacher">
-          <td class="row-title">{{d.time}}</td>
-          <td *ngFor="let e of d.entries">
-            <app-schedule-tile *ngIf="e" [settings]="settings" [entry]="e" [top]="e.batch" [middle]="e.subject" [bottom]="e.room" 
-              (saveSuccessEvent)="refreshSchedules()"></app-schedule-tile> 
-            <div *ngIf="!e"></div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </mat-tab>
-
-  <mat-tab label="Room use">
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th *ngFor="let r of settings.rooms">{{r}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let d of dataPerRoom">
-          <td class="row-title">{{d.time}}</td>
-          <td *ngFor="let e of d.entries">
-            <app-schedule-tile *ngIf="e" [settings]="settings" [entry]="e" [top]="e.batch" [middle]="e.teacher" [bottom]="e.subject" 
-              (saveSuccessEvent)="refreshSchedules()"></app-schedule-tile>
-            <div *ngIf="!e"></div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab *ngFor="let t of settings.batches" label="{{t}}">
+          <app-calendar [settings]="settings"></app-calendar>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-tab>
+    
+    <mat-tab label="Teachers calendar">
+      <app-calendar [settings]="settings"></app-calendar>
+    </mat-tab>
+    
+    <mat-tab label="Room usage">
+      <app-calendar [settings]="settings"></app-calendar>
   </mat-tab>
 </mat-tab-group>
