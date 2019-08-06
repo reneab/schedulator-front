@@ -13,6 +13,9 @@ import { Observable } from 'rxjs';
 })
 export class SettingsComponent implements OnInit {
 
+  collectionName = 'settings';
+  docName = 'main';
+
   changed = false; // used for disabling Save button
   saved = false; // used for displaying success icon
   errorMessage: string;
@@ -23,7 +26,7 @@ export class SettingsComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    this.settingsDoc = db.collection('settings').doc('v1');
+    this.settingsDoc = db.collection(this.collectionName).doc(this.docName);
     this.settingsDoc.valueChanges().subscribe( doc => {
       console.log(doc);
       this.settings = doc;
