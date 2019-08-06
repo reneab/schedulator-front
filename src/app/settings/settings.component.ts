@@ -3,8 +3,7 @@ import {MatChipInputEvent, MatIconRegistry} from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 const collectionName = 'settings';
 const docName = 'main';
