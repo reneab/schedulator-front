@@ -1,17 +1,17 @@
 <mat-tab-group mat-align-tabs="center">
   <mat-tab label="Batches calendar">
-    <mat-tab-group mat-align-tabs="center">
-        <mat-tab *ngFor="let t of settings.batches" label="{{t}}">
+    <!-- <mat-tab-group mat-align-tabs="center"> -->
+        <!-- <mat-tab *ngFor="let t of settings.batches" label="{{t}}"> -->
           <app-calendar [settings]="settings"></app-calendar>
-        </mat-tab>
-      </mat-tab-group>
+        <!-- </mat-tab> -->
+      <!-- </mat-tab-group> -->
     </mat-tab>
     
     <mat-tab label="Teachers calendar">
-      <app-calendar [settings]="settings"></app-calendar>
+      <!-- <app-calendar [settings]="settings"></app-calendar> -->
     </mat-tab>
     
     <mat-tab label="Room usage">
-      <app-calendar [settings]="settings"></app-calendar>
+      <!-- <app-calendar [settings]="settings"></app-calendar> -->
   </mat-tab>
 </mat-tab-group>
