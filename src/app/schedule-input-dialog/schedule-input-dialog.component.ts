@@ -5,6 +5,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 import { DataService } from '../data.service';
 import { ScheduleEntry } from '../ScheduleEntry';
 import { Observable } from 'rxjs';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-schedule-input-dialog',
@@ -33,8 +34,9 @@ export class ScheduleInputDialogComponent implements OnInit {
 
   ngOnInit() {
     this.scheduleForm = new FormGroup({
-      time: new FormControl({value: this.entry.time, disabled: !this.editingMode}, Validators.required),
-      batch: new FormControl({value: this.entry.batch, disabled: !this.editingMode}, Validators.required),
+      from: new FormControl({value: format(new Date(this.entry.from), 'HH:mm'), disabled: !this.editingMode}, Validators.required),
+      to: new FormControl(format(new Date(this.entry.to), 'HH:mm'), Validators.required),
+      batch: new FormControl(this.entry.batch || this.settings.batches[0], Validators.required),
       teacher: new FormControl(this.entry.teacher || this.settings.teachers[0], Validators.required),
       room: new FormControl(this.entry.room || this.settings.rooms[0], Validators.required),
       subject: new FormControl(this.entry.subject, Validators.required)

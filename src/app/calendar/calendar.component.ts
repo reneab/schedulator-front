@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { addDays, addHours, startOfDay } from 'date-fns';
+import { format, addDays, addHours, startOfDay } from 'date-fns';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
 
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { database } from 'src/environments/environment';
+import { ScheduleEntry } from '../ScheduleEntry';
 
 const colors: any = {
   red: {
@@ -56,6 +57,7 @@ export class CalendarComponent implements OnInit {
     this.eventsDBColl.valueChanges().subscribe( data => {
       console.log('Retreived from Firestore: ', data);
       this.events = data.map(e => {
+        // TODO convert data to ScheduleEntry, and from there to calendar event using another function
         const event: CalendarEvent = {
           // id: e.id,
           start: new Date(e.from.seconds * 1000),
@@ -76,25 +78,27 @@ export class CalendarComponent implements OnInit {
     // open Edit dialog
   }
 
-  addEvent(eventItem): void {
-    console.log(eventItem);
-    // const dialogRef = this.dialog.open(ScheduleInputDialogComponent, {
-    //   height: '500px',
-    //   width: '600px',
-    //   data: {
-    //     settings: this.settings,
-    //     editing: false
-    //     entry: new ScheduleEntry(null, this.timeslot, null, this.batch, null, null)
-    //   }
-    // });
+  addEvent(time): void {
+    const start: Date = new Date(time);
+    console.log('Adding event on ', start);
+    const dialogRef = this.dialog.open(ScheduleInputDialogComponent, {
+      height: '550px',
+      width: '500px',
+      data: {
+        settings: this.settings,
+        editing: false,
+        entry: new ScheduleEntry(start, addHours(start, 1),
+          this.settings.teachers[0], this.settings.batches[0], this.settings.rooms[0], null)
+      }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     // this.saveSuccessEvent.emit();
-    //   } else {
-    //     console.log('Input dialog was closed without saving');
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // this.saveSuccessEvent.emit();
+      } else {
+        console.log('Input dialog was closed without saving');
+      }
+    });
   }
 
 }
