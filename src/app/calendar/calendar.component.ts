@@ -87,6 +87,7 @@ export class CalendarComponent implements OnInit {
       data: {
         settings: this.settings,
         editing: false,
+        day: startOfDay(start),
         entry: new ScheduleEntry(start, addHours(start, 1),
           this.settings.teachers[0], this.settings.batches[0], this.settings.rooms[0], null)
       }

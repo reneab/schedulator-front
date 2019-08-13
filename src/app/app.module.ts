@@ -12,7 +12,6 @@ import { DataService } from './data.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ScheduleTileComponent } from './schedule-tile/schedule-tile.component';
-import { EmptyTileComponent } from './empty-tile/empty-tile.component';
 import { ScheduleInputDialogComponent } from './schedule-input-dialog/schedule-input-dialog.component';
 import { ErrorMessageDialogComponent } from './error-message-dialog/error-message-dialog.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -36,7 +35,6 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     ScheduleTileComponent,
-    EmptyTileComponent,
     ScheduleInputDialogComponent,
     ErrorMessageDialogComponent,
     SettingsComponent,

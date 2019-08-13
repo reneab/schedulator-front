@@ -2,10 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material';
-import { DataService } from '../data.service';
 import { ScheduleEntry } from '../ScheduleEntry';
-import { Observable } from 'rxjs';
-import { format } from 'date-fns';
+import { format, addHours, addMinutes } from 'date-fns';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { database } from 'src/environments/environment';
 
 @Component({
   selector: 'app-schedule-input-dialog',
@@ -14,18 +14,24 @@ import { format } from 'date-fns';
 })
 export class ScheduleInputDialogComponent implements OnInit {
 
-  editingMode: boolean;
+  eventsDBColl: AngularFirestoreCollection<any>;
+
+  editingMode: boolean; // creation of new entry or editing existing
   scheduleForm: FormGroup;
-  settings: any;
-  entry: ScheduleEntry;
+  settings: any; // needed for the dropdown menus in the form
+  entry: ScheduleEntry; // a schedule entry to pre-fill the form
+  day: Date; // the day where the new event should be. Because it' not asked in the form
+
   errorMessage: string;
 
   constructor(public dialogRef: MatDialogRef<ScheduleInputDialogComponent>,
-              private dataService: DataService,
+              public db: AngularFirestore,
               @Inject(MAT_DIALOG_DATA) public data: any) {
-    this.settings = data.settings;
-    this.editingMode = data.editing;
-    this.entry = data.entry;
+                this.eventsDBColl = db.collection(database.schedulesCollection);
+                this.settings = data.settings;
+                this.editingMode = data.editing;
+                this.entry = data.entry;
+                this.day = data.day;
   }
 
   onNoClick(): void {
@@ -43,29 +49,32 @@ export class ScheduleInputDialogComponent implements OnInit {
     });
   }
 
+  // converts the form output (string) to a date
+  convertTimeInputToDate = function(time: string): Date {
+    const h: number = parseInt(time.split(':')[0], 0);
+    const m: number = parseInt(time.split(':')[1], 0);
+    const d: Date = addMinutes(addHours(this.day, h), m);
+    return d;
+  };
+
   save = function(element) {
     console.log('Saving ' + JSON.stringify(element));
-    if (this.editingMode) {
-      this.handleBackEndRequest(this.dataService.saveScheduleElement(element, this.entry.id));
-    } else {
-      this.handleBackEndRequest(this.dataService.saveScheduleElement(element));
-    }
+    element.from = this.convertTimeInputToDate(element.from);
+    element.to = this.convertTimeInputToDate(element.to);
+    this.eventsDBColl.add(element)
+      .then(res => {
+        console.log(res);
+        this.dialogRef.close(true);
+      }).catch(error => {
+        const message = error._body;
+        console.log(message);
+        this.errorMessage = message;
+      });
   };
 
   delete = function() {
     console.log('Deleting entry with ID: ' + this.entry.id);
-    this.handleBackEndRequest(this.dataService.deleteScheduleElement(this.entry.id));
-  };
-
-  private handleBackEndRequest = function(obs: Observable<string>) {
-    obs.subscribe(res => {
-      console.log(res);
-      this.dialogRef.close(true);
-    }, error => {
-      const message = error._body;
-      console.log(message);
-      this.errorMessage = message;
-    });
+    // TODO complete this one
   };
 
 }
