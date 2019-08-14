@@ -13,6 +13,6 @@ export const environment = {
 
 export const database = {
   settingsCollection: 'settings',
-  settingsDocument: 'prod',
+  settingsDocument: 'main',
   schedulesCollection: 'schedules'
 };
