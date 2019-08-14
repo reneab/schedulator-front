@@ -5,6 +5,7 @@
     <p class="error">{{errorMessage}}</p>
     <mat-icon class="success" *ngIf="saved">check_circle</mat-icon>
     <button mat-raised-button color="warn" [disabled]='!changed' (click)="saveSettings()">Save</button>  
+    <button mat-raised-button color="accent" (click)="postponeOneWeek()">Import schedule from previous week</button>  
     <button mat-raised-button color="primary" [routerLink]="['/']">Home</button>  
   </mat-toolbar-row>
 </mat-toolbar>

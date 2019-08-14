@@ -3,8 +3,9 @@ import {MatChipInputEvent, MatIconRegistry} from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { database } from 'src/environments/environment';
+import { ScheduleEntry } from '../ScheduleEntry';
 
 @Component({
   selector: 'app-settings',
@@ -20,6 +21,8 @@ export class SettingsComponent implements OnInit {
   settingsDoc: AngularFirestoreDocument<any>;
   settings: any = {};
 
+  schedulesColl: AngularFirestoreCollection<any>;
+
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
@@ -28,6 +31,9 @@ export class SettingsComponent implements OnInit {
       console.log(doc);
       this.settings = doc;
     });
+
+    this.schedulesColl = db.collection(database.schedulesCollection);
+
   }
 
   saveSettings(): void {
@@ -72,6 +78,25 @@ export class SettingsComponent implements OnInit {
     if (input) {
       input.value = '';
     }
+  }
+
+  addOneWeekInSeconds = (dateInSeconds) => {
+    return new Date((dateInSeconds + 7 * 24 * 60 * 60) * 1000);
+  }
+
+  postponeOneWeek = () => {
+    console.warn('Updating all schedules by one week...');
+    this.schedulesColl.get().forEach((item) => {
+      return item.docs.map(d => {
+        console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
+        return this.db.doc(`schedules/${d.id}`).update(
+          {
+            from: this.addOneWeekInSeconds(d.data().from.seconds),
+            to: this.addOneWeekInSeconds(d.data().to.seconds),
+          }
+        );
+      });
+    });
   }
 
 }
