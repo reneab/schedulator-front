@@ -3,25 +3,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { format, addDays, addHours, startOfDay } from 'date-fns';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
-
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { database } from 'src/environments/environment';
 import { ScheduleEntry } from '../ScheduleEntry';
-
-const colors = [
-  { // red
-    primary: '#ad2121',
-    secondary: '#FAE3E3'
-  },
-  { // blue
-    primary: '#1e90ff',
-    secondary: '#D1E8FF'
-  },
-  { // yellow
-    primary: '#e3bc08',
-    secondary: '#FDF1BA'
-  }
-];
 
 @Component({
   selector: 'app-calendar',
@@ -31,10 +13,10 @@ const colors = [
 export class CalendarComponent implements OnInit {
 
   @Input() settings: any;
+  @Input() events: CalendarEvent[];
 
   viewDate: Date = new Date();
 
-  allEvents: CalendarEvent[];
   filteredEvents: CalendarEvent[];
   // = [
   //    {
@@ -50,43 +32,13 @@ export class CalendarComponent implements OnInit {
   //   },
   // ];
 
-  collRef: AngularFirestoreCollection<any>;
+  constructor(public dialog: MatDialog) { }
 
-  constructor(public db: AngularFirestore, public dialog: MatDialog) {
-    this.collRef = db.collection(database.schedulesCollection);
-  }
-
-  ngOnInit() {
-    this.collRef.snapshotChanges().subscribe( items => {
-      console.log('Retreived from Firestore: ', items);
-      let counter = 0; // just for coloring TODO: find a better solution
-      this.allEvents = items.map(e => {
-        // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
-        const data = e.payload.doc.data();
-        const event: CalendarEvent = {
-          start: new Date(data.from.seconds * 1000),
-          end: new Date(data.to.seconds * 1000),
-          title: '<b>'.concat(data.subject, '</b> ', data.teacher, ', ', data.room),
-          color: colors[counter % 3],
-          meta: {
-            id: e.payload.doc.id,
-            batch: data.batch,
-            teacher: data.teacher,
-            subject: data.subject,
-            room: data.room
-          }
-        };
-        counter++;
-        console.log('Loaded event:', event);
-        return event;
-      });
-      this.filteredEvents = this.allEvents;
-    });
-  }
+  ngOnInit() { }
 
   onChangeToggle(event): void {
     console.log('Changed batch filter to: ' + event.value);
-    this.filteredEvents = this.allEvents.filter(i => i.meta.batch === event.value);
+    this.filteredEvents = this.events.filter(i => i.meta.batch === event.value);
   }
 
   // util function
