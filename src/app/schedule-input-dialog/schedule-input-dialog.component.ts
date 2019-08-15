@@ -57,6 +57,7 @@ export class ScheduleInputDialogComponent implements OnInit {
     return d;
   };
 
+  // TODO: add switch to save new element or modify existing
   save = function(element) {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
@@ -74,7 +75,14 @@ export class ScheduleInputDialogComponent implements OnInit {
 
   delete = function() {
     console.log('Deleting entry with ID: ' + this.entry.id);
-    // TODO complete this one
+    this.eventsDBColl.doc(this.entry.id).delete()
+      .then(res => {
+        this.dialogRef.close(true);
+      }).catch(error => {
+        const message = error._body;
+        console.log(message);
+        this.errorMessage = message;
+      });
   };
 
 }

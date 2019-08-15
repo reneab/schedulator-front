@@ -5,5 +5,6 @@ export class ScheduleEntry {
                 public teacher: string,
                 public batch: string,
                 public room: string,
-                public subject: string) {}
+                public subject: string,
+                public id?: string) {}
 }

@@ -53,7 +53,6 @@ export class CalendarComponent implements OnInit {
 
   constructor(public db: AngularFirestore, public dialog: MatDialog) {
     this.eventsDBColl = db.collection(database.schedulesCollection);
-
   }
 
   ngOnInit() {
@@ -83,33 +82,40 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  eventClicked({ event }: { event: CalendarEvent }): void {
-    console.log('Event clicked:', event.title);
-    // open Edit dialog
-  }
-
-  addEvent(time): void {
-    const start: Date = new Date(time);
-    console.log('Adding event on ', start);
+  // util function
+  openScheduleInputDialog(editingMode: boolean, day: Date, data: ScheduleEntry): void {
     const dialogRef = this.dialog.open(ScheduleInputDialogComponent, {
       height: '550px',
       width: '500px',
       data: {
         settings: this.settings,
-        editing: false,
-        day: startOfDay(start),
-        entry: new ScheduleEntry(start, addHours(start, 1),
-          this.settings.teachers[0], this.settings.batches[0], this.settings.rooms[0], null)
+        editing: editingMode,
+        day: startOfDay(day),
+        entry: data
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.saveSuccessEvent.emit();
+        console.log(result);
       } else {
         console.log('Input dialog was closed without saving');
       }
     });
   }
 
+  addEvent(time): void {
+    const startDate: Date = new Date(time);
+    console.log('Adding event on ', startDate);
+    this.openScheduleInputDialog(false, startDate, new ScheduleEntry(startDate, addHours(startDate, 1),
+      this.settings.teachers[0], this.settings.batches[0], this.settings.rooms[0], null),
+    );
+  }
+
+  modifyEvent({ event }: { event: CalendarEvent }): void {
+    console.log('Modifying event with ID: ', event.meta.id);
+    this.openScheduleInputDialog(true, event.start, new ScheduleEntry(event.start, event.end,
+      event.meta.teacher, event.meta.batch, event.meta.room, event.meta.subject, event.meta.id),
+    );
+  }
 }
