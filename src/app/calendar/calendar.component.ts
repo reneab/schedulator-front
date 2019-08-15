@@ -32,13 +32,21 @@ export class CalendarComponent implements OnInit {
   //   },
   // ];
 
+  selectedFilters: string[] = [];
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() { }
 
   onChangeToggle(event): void {
-    console.log('Changed batch filter to: ' + event.value);
-    this.filteredEvents = this.events.filter(i => i.meta.batch === event.value);
+    const value: string = event.value;
+    console.log('Clicked on filter: ', value);
+    if (this.selectedFilters.indexOf(value) >= 0) {
+      this.selectedFilters.splice(this.selectedFilters.indexOf(value), 1);
+    } else {
+      this.selectedFilters.push(value);
+    }
+    this.filteredEvents = this.events.filter(i => this.selectedFilters.indexOf(i.meta.batch) >= 0);
   }
 
   // util function

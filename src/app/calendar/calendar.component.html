@@ -21,11 +21,10 @@
 
 <!-- filters -->
 <div class="toggle-bar">
-  <mat-button-toggle-group #batchToggleGroup="matButtonToggleGroup">
+  <mat-button-toggle-group #batchToggleGroup="matButtonToggleGroup" multiple="true">
     <mat-button-toggle *ngFor="let b of settings.batches" [value]="b" (change)="onChangeToggle($event)">{{b}}
     </mat-button-toggle>
   </mat-button-toggle-group>
-  <div class="example-selected-value">Selected value: {{batchToggleGroup.value}}</div>
 </div>
 
 <!-- Main view -->
