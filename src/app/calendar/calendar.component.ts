@@ -8,20 +8,20 @@ import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection 
 import { database } from 'src/environments/environment';
 import { ScheduleEntry } from '../ScheduleEntry';
 
-const colors: any = {
-  red: {
+const colors = [
+  { // red
     primary: '#ad2121',
     secondary: '#FAE3E3'
   },
-  blue: {
+  { // blue
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
-  yellow: {
+  { // yellow
     primary: '#e3bc08',
     secondary: '#FDF1BA'
   }
-};
+];
 
 @Component({
   selector: 'app-calendar',
@@ -54,24 +54,34 @@ export class CalendarComponent implements OnInit {
   constructor(public db: AngularFirestore, public dialog: MatDialog) {
     this.eventsDBColl = db.collection(database.schedulesCollection);
 
-    this.eventsDBColl.valueChanges().subscribe( data => {
-      console.log('Retreived from Firestore: ', data);
-      this.events = data.map(e => {
-        // TODO convert data to ScheduleEntry, and from there to calendar event using another function
-        const event: CalendarEvent = {
-          // id: e.id,
-          start: new Date(e.from.seconds * 1000),
-          end: new Date(e.to.seconds * 1000),
-          title: '<b>'.concat(e.subject, '</b> ', e.teacher, ', ', e.room),
-          color: colors.blue
-        };
-        return event;
-      });
-      console.log(this.events);
-    });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.eventsDBColl.snapshotChanges().subscribe( items => {
+      console.log('Retreived from Firestore: ', items);
+      let counter = 0; // just for coloring
+      this.events = items.map(e => {
+        // TODO convert data to ScheduleEntry, and from there to calendar event using another function
+        const data = e.payload.doc.data();
+        const event: CalendarEvent = {
+          start: new Date(data.from.seconds * 1000),
+          end: new Date(data.to.seconds * 1000),
+          title: '<b>'.concat(data.subject, '</b> ', data.teacher, ', ', data.room),
+          color: colors[counter % 3],
+          meta: {
+            id: e.payload.doc.id,
+            batch: data.batch,
+            teacher: data.teacher,
+            subject: data.subject,
+            room: data.room
+          }
+        };
+        counter++;
+        console.log('Loaded event:', event);
+        return event;
+      });
+    });
+  }
 
   eventClicked({ event }: { event: CalendarEvent }): void {
     console.log('Event clicked:', event.title);
