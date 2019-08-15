@@ -21,8 +21,9 @@
 
 <!-- filters -->
 <div class="toggle-bar">
-  <mat-button-toggle-group #batchToggleGroup="matButtonToggleGroup" multiple="true">
-    <mat-button-toggle *ngFor="let b of settings.batches" [value]="b" (change)="onChangeToggle($event)">{{b}}
+  <mat-button-toggle-group #filterToggleGroup="matButtonToggleGroup" multiple="true">
+    <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]" [value]="f" (change)="onChangeToggle($event)">
+      {{f}}
     </mat-button-toggle>
   </mat-button-toggle-group>
 </div>

@@ -14,6 +14,10 @@ export class CalendarComponent implements OnInit {
 
   @Input() settings: any;
   @Input() events: CalendarEvent[];
+  @Input() filteringKey: string;
+  @Input() settingsFilteringKey: string;
+
+  // TODO: create toggle button to make filtering exclusive or multiple
 
   viewDate: Date = new Date();
 
@@ -46,7 +50,11 @@ export class CalendarComponent implements OnInit {
     } else {
       this.selectedFilters.push(value);
     }
-    this.filteredEvents = this.events.filter(i => this.selectedFilters.indexOf(i.meta.batch) >= 0);
+    this.reFilterEvents();
+  }
+
+  reFilterEvents(): void {
+    this.filteredEvents = this.events.filter(i => this.selectedFilters.indexOf(i.meta[this.filteringKey]) >= 0);
   }
 
   // util function
@@ -65,6 +73,7 @@ export class CalendarComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log(result);
+        this.reFilterEvents();
       } else {
         console.log('Input dialog was closed without saving');
       }
