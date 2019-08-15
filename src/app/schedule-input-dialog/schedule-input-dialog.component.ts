@@ -57,14 +57,14 @@ export class ScheduleInputDialogComponent implements OnInit {
     return d;
   };
 
-  // TODO: add switch to save new element or modify existing
   save = function(element) {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
-    this.eventsDBColl.add(element)
-      .then(res => {
-        console.log(res);
+    // save new or update existing
+    // TODO: check for conflicts first!
+    const exec = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
+    exec.then(res => {
         this.dialogRef.close(true);
       }).catch(error => {
         const message = error._body;
