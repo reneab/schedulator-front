@@ -34,7 +34,8 @@ export class CalendarComponent implements OnInit {
 
   viewDate: Date = new Date();
 
-  events: CalendarEvent[];
+  allEvents: CalendarEvent[];
+  filteredEvents: CalendarEvent[];
   // = [
   //    {
   //     start: addHours(startOfDay(new Date()), 8),
@@ -56,15 +57,10 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadEvents();
-  }
-
-  loadEvents(batchFilter?: string) {
     this.collRef.snapshotChanges().subscribe( items => {
       console.log('Retreived from Firestore: ', items);
       let counter = 0; // just for coloring TODO: find a better solution
-      this.events = items.filter(batchFilter ? i => i.payload.doc.data().batch === batchFilter : i => true)
-      .map(e => {
+      this.allEvents = items.map(e => {
         // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
         const data = e.payload.doc.data();
         const event: CalendarEvent = {
@@ -84,12 +80,13 @@ export class CalendarComponent implements OnInit {
         console.log('Loaded event:', event);
         return event;
       });
+      this.filteredEvents = this.allEvents;
     });
   }
 
-  selectionChanged(event): void {
+  onChangeToggle(event): void {
     console.log('Changed batch filter to: ' + event.value);
-    this.loadEvents(event.value);
+    this.filteredEvents = this.allEvents.filter(i => i.meta.batch === event.value);
   }
 
   // util function

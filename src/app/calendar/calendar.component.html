@@ -22,7 +22,7 @@
 <!-- filters -->
 <div class="toggle-bar">
   <mat-button-toggle-group #batchToggleGroup="matButtonToggleGroup">
-    <mat-button-toggle *ngFor="let b of settings.batches" [value]="b" (change)="selectionChanged($event)">{{b}}
+    <mat-button-toggle *ngFor="let b of settings.batches" [value]="b" (change)="onChangeToggle($event)">{{b}}
     </mat-button-toggle>
   </mat-button-toggle-group>
   <div class="example-selected-value">Selected value: {{batchToggleGroup.value}}</div>
@@ -32,7 +32,7 @@
 <mwl-calendar-week-view
   precision="minutes"
   [viewDate]="viewDate"
-  [events]="events"
+  [events]="filteredEvents"
   [weekStartsOn]=1
   [excludeDays]="[0]"
   [dayStartHour]=7
