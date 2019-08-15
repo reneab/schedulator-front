@@ -19,6 +19,15 @@
   </div>
 </ng-template>
 
+<!-- filters -->
+<div class="toggle-bar">
+  <mat-button-toggle-group #batchToggleGroup="matButtonToggleGroup">
+    <mat-button-toggle *ngFor="let b of settings.batches" [value]="b" (change)="selectionChanged($event)">{{b}}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+  <div class="example-selected-value">Selected value: {{batchToggleGroup.value}}</div>
+</div>
+
 <!-- Main view -->
 <mwl-calendar-week-view
   precision="minutes"

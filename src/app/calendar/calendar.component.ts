@@ -49,18 +49,23 @@ export class CalendarComponent implements OnInit {
   //   },
   // ];
 
-  eventsDBColl: AngularFirestoreCollection<any>;
+  collRef: AngularFirestoreCollection<any>;
 
   constructor(public db: AngularFirestore, public dialog: MatDialog) {
-    this.eventsDBColl = db.collection(database.schedulesCollection);
+    this.collRef = db.collection(database.schedulesCollection);
   }
 
   ngOnInit() {
-    this.eventsDBColl.snapshotChanges().subscribe( items => {
+    this.loadEvents();
+  }
+
+  loadEvents(batchFilter?: string) {
+    this.collRef.snapshotChanges().subscribe( items => {
       console.log('Retreived from Firestore: ', items);
-      let counter = 0; // just for coloring
-      this.events = items.map(e => {
-        // TODO convert data to ScheduleEntry, and from there to calendar event using another function
+      let counter = 0; // just for coloring TODO: find a better solution
+      this.events = items.filter(batchFilter ? i => i.payload.doc.data().batch === batchFilter : i => true)
+      .map(e => {
+        // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
         const data = e.payload.doc.data();
         const event: CalendarEvent = {
           start: new Date(data.from.seconds * 1000),
@@ -80,6 +85,11 @@ export class CalendarComponent implements OnInit {
         return event;
       });
     });
+  }
+
+  selectionChanged(event): void {
+    console.log('Changed batch filter to: ' + event.value);
+    this.loadEvents(event.value);
   }
 
   // util function

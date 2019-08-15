@@ -6,7 +6,7 @@ import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
   MatDialogModule, MatTooltipModule,
-  MatChipsModule, MatIconModule, MatTabsModule } from '@angular/material';
+  MatChipsModule, MatIconModule, MatTabsModule, MatButtonToggleModule } from '@angular/material';
 import { DataService } from './data.service';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -62,7 +62,8 @@ const appRoutes: Routes = [
     MatTooltipModule,
     MatChipsModule,
     MatIconModule,
-    MatTabsModule
+    MatTabsModule,
+    MatButtonToggleModule
   ],
   entryComponents: [ScheduleInputDialogComponent, ErrorMessageDialogComponent],
   providers: [DataService],
