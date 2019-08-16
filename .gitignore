@@ -5,6 +5,9 @@
 .firebase*
 firebase*
 
+# environment data
+/src/environments
+
 # compiled output
 /dist
 /tmp
