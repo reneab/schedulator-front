@@ -3,9 +3,10 @@ import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import { ScheduleEntry } from '../ScheduleEntry';
-import { format, addHours, addMinutes } from 'date-fns';
+import { format, addHours, addMinutes, isBefore, isAfter } from 'date-fns';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { database } from 'src/environments/environment';
+import { CalendarEvent } from 'calendar-utils';
 
 @Component({
   selector: 'app-schedule-input-dialog',
@@ -19,6 +20,7 @@ export class ScheduleInputDialogComponent implements OnInit {
   editingMode: boolean; // creation of new entry or editing existing
   scheduleForm: FormGroup;
   settings: any; // needed for the dropdown menus in the form
+  events: CalendarEvent[]; // needed for the dropdown menus in the form
   entry: ScheduleEntry; // a schedule entry to pre-fill the form
   day: Date; // the day where the new event should be. Because it' not asked in the form
 
@@ -29,6 +31,7 @@ export class ScheduleInputDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
                 this.eventsDBColl = db.collection(database.schedulesCollection);
                 this.settings = data.settings;
+                this.events = data.events;
                 this.editingMode = data.editing;
                 this.entry = data.entry;
                 this.day = data.day;
@@ -57,20 +60,48 @@ export class ScheduleInputDialogComponent implements OnInit {
     return d;
   };
 
+  checkForConflict = function(element: any): string {
+    let conflict: string;
+    this.events.forEach(e => {
+      // FIXME: doesn't work when the end and start are exactly the same
+      // TODO: add a check on the event ID that it is different (for updates)
+      if (isAfter(element.from, e.start) && isBefore(element.from, e.end) ||
+        isAfter(element.to, e.start) && isBefore(element.to, e.end)) {
+          if (element.batch === e.meta.batch) {
+            conflict = element.batch;
+          }
+          if (element.room === e.meta.room) {
+            conflict = element.room;
+          }
+          if (element.teacher === e.meta.teacher) {
+            conflict = element.teacher;
+          }
+      }
+    });
+    return conflict;
+  };
+
   save = function(element) {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
-    // save new or update existing
-    // TODO: check for conflicts first!
-    const exec = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
-    exec.then(res => {
+    // checking for schedules conflicts first
+    const conflict: string = this.checkForConflict(element);
+    if (conflict) {
+      console.warn('Schedule conflict for', conflict);
+      this.errorMessage = conflict + ' is already taken';
+    } else {
+      console.log('No conflict found. Updating database...');
+      // save new or update existing
+      const exec = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
+      exec.then(res => {
         this.dialogRef.close(true);
       }).catch(error => {
         const message = error._body;
         console.log(message);
         this.errorMessage = message;
       });
+    }
   };
 
   delete = function() {

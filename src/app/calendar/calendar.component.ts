@@ -64,6 +64,7 @@ export class CalendarComponent implements OnInit {
       width: '500px',
       data: {
         settings: this.settings,
+        events: this.events,
         editing: editingMode,
         day: startOfDay(day),
         entry: data
