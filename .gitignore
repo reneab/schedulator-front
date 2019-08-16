@@ -7,6 +7,7 @@ firebase*
 
 # environment data
 /src/environments
+/src/firebaseInit.js
 
 # compiled output
 /dist
