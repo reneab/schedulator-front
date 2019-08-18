@@ -53,14 +53,14 @@ export class ScheduleInputDialogComponent implements OnInit {
   }
 
   // converts the form output (string) to a date
-  convertTimeInputToDate = function(time: string): Date {
+  convertTimeInputToDate(time: string): Date {
     const h: number = parseInt(time.split(':')[0], 0);
     const m: number = parseInt(time.split(':')[1], 0);
     const d: Date = addMinutes(addHours(this.day, h), m);
     return d;
-  };
+  }
 
-  checkForConflict = function(element: any): string {
+  checkForConflict(element: any): string {
     let conflict: string;
     this.events.forEach(e => {
       // FIXME: doesn't work when the end and start are exactly the same
@@ -79,9 +79,9 @@ export class ScheduleInputDialogComponent implements OnInit {
       }
     });
     return conflict;
-  };
+  }
 
-  save = function(element) {
+  save(element) {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
@@ -93,7 +93,7 @@ export class ScheduleInputDialogComponent implements OnInit {
     } else {
       console.log('No conflict found. Updating database...');
       // save new or update existing
-      const exec = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
+      const exec: Promise<any> = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
       exec.then(res => {
         this.dialogRef.close(true);
       }).catch(error => {
@@ -102,9 +102,9 @@ export class ScheduleInputDialogComponent implements OnInit {
         this.errorMessage = message;
       });
     }
-  };
+  }
 
-  delete = function() {
+  delete() {
     console.log('Deleting entry with ID: ' + this.entry.id);
     this.eventsDBColl.doc(this.entry.id).delete()
       .then(res => {
@@ -114,6 +114,6 @@ export class ScheduleInputDialogComponent implements OnInit {
         console.log(message);
         this.errorMessage = message;
       });
-  };
+  }
 
 }
