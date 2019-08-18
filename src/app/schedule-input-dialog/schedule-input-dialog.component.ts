@@ -62,8 +62,8 @@ export class ScheduleInputDialogComponent implements OnInit {
 
   checkForConflict(element: any): string {
     let conflict: string;
-    this.events.forEach(e => {
-      // TODO: add a check on the event ID that it is different (for updates)
+    this.events.filter(e => e.meta.id !== this.entry.id) // need to not consider existing element (when updating)
+    .forEach(e => {
       if ((isAfter(element.from, e.start) || isEqual(element.from, e.start)) && isBefore(element.from, e.end)
       || isAfter(element.to, e.start) && (isBefore(element.to, e.end) || isEqual(element.to, e.end))
       || isBefore(element.from, e.start) && isAfter(element.to, e.end)) {
