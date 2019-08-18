@@ -194,7 +194,7 @@ describe('ScheduleInputDialogComponent', () => {
     expect(component.checkForConflict(toAdd)).toBeDefined();
   });
 
-  it('should return conflict if new event is included in the other', () => {
+  it('should return conflict if new event is included in the existing', () => {
     const dayStart = startOfDay(new Date());
     const existingEvent: CalendarEvent = {
       start: addHours(dayStart, 1),
@@ -204,6 +204,20 @@ describe('ScheduleInputDialogComponent', () => {
     };
     component.events.push(existingEvent);
     const toAdd = {from: addHours(dayStart, 2), to: addHours(dayStart, 3),
+      batch: '2020A', teacher: 'Jun Rey', room: 'C1'};
+    expect(component.checkForConflict(toAdd)).toBeDefined();
+  });
+
+  it('should return conflict if new event includes the existing', () => {
+    const dayStart = startOfDay(new Date());
+    const existingEvent: CalendarEvent = {
+      start: addHours(dayStart, 4),
+      end: addHours(dayStart, 5),
+      title: '',
+      meta: {room: 'C1'}
+    };
+    component.events.push(existingEvent);
+    const toAdd = {from: addHours(dayStart, 1), to: addHours(dayStart, 6),
       batch: '2020A', teacher: 'Jun Rey', room: 'C1'};
     expect(component.checkForConflict(toAdd)).toBeDefined();
   });
