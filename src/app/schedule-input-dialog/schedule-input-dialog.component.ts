@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import { ScheduleEntry } from '../ScheduleEntry';
-import { format, addHours, addMinutes, isBefore, isAfter } from 'date-fns';
+import { format, addHours, addMinutes, isBefore, isAfter, startOfDay } from 'date-fns';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { database } from 'src/environments/environment';
 import { CalendarEvent } from 'calendar-utils';
@@ -56,7 +56,7 @@ export class ScheduleInputDialogComponent implements OnInit {
   convertTimeInputToDate(time: string): Date {
     const h: number = parseInt(time.split(':')[0], 0);
     const m: number = parseInt(time.split(':')[1], 0);
-    const d: Date = addMinutes(addHours(this.day, h), m);
+    const d: Date = addMinutes(addHours(startOfDay(this.day), h), m);
     return d;
   }
 
