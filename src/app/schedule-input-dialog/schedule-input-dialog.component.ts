@@ -85,6 +85,7 @@ export class ScheduleInputDialogComponent implements OnInit {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
+    // TODO: validate that to is really after from...
     // checking for schedules conflicts first
     const conflict: string = this.checkForConflict(element);
     if (conflict) {
