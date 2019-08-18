@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import { ScheduleEntry } from '../ScheduleEntry';
-import { format, addHours, addMinutes, isBefore, isAfter, startOfDay } from 'date-fns';
+import { format, addHours, addMinutes, isBefore, isAfter, startOfDay, isEqual } from 'date-fns';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { database } from 'src/environments/environment';
 import { CalendarEvent } from 'calendar-utils';
@@ -63,10 +63,9 @@ export class ScheduleInputDialogComponent implements OnInit {
   checkForConflict(element: any): string {
     let conflict: string;
     this.events.forEach(e => {
-      // FIXME: doesn't work when the end and start are exactly the same
       // TODO: add a check on the event ID that it is different (for updates)
-      if (isAfter(element.from, e.start) && isBefore(element.from, e.end) ||
-        isAfter(element.to, e.start) && isBefore(element.to, e.end)) {
+      if ((isAfter(element.from, e.start) || isEqual(element.from, e.start)) && isBefore(element.from, e.end)
+      || isAfter(element.to, e.start) && (isBefore(element.to, e.end) || isEqual(element.to, e.end))) {
           if (element.batch === e.meta.batch) {
             conflict = element.batch;
           }
