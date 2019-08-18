@@ -4,8 +4,7 @@
     <span class="spacer"></span>
     <p class="error">{{errorMessage}}</p>
     <mat-icon class="success" *ngIf="saved">check_circle</mat-icon>
-    <button mat-raised-button color="warn" [disabled]='!changed' (click)="saveSettings()">Save</button>  
-    <button mat-raised-button color="accent" (click)="postponeOneWeek()">Import schedule from previous week</button>  
+    <button mat-raised-button color="accent" [disabled]='!changed' (click)="saveSettings()">Save</button>  
     <button mat-raised-button color="primary" [routerLink]="['/']">Home</button>  
   </mat-toolbar-row>
 </mat-toolbar>
@@ -46,3 +45,11 @@
             (matChipInputTokenEnd)="add($event, 'batches')">
   </mat-chip-list>
 </mat-form-field>
+
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="postponeOneWeek()">Import events from previous week</button>  
+    <button mat-raised-button color="warn" (click)="deleteAllSchedules()">Delete all schedules</button>  
+  </mat-toolbar-row>
+</mat-toolbar>

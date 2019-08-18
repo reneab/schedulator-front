@@ -18,26 +18,26 @@ export class SettingsComponent implements OnInit {
   saved = false; // used for displaying success icon
   errorMessage: string;
 
-  settingsDoc: AngularFirestoreDocument<any>;
+  settingsDocRef: AngularFirestoreDocument<any>;
   settings: any = {};
 
-  schedulesColl: AngularFirestoreCollection<any>;
+  schedulesCollRef: AngularFirestoreCollection<any>;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    this.settingsDoc = db.collection(database.settingsCollection).doc(database.settingsDocument);
-    this.settingsDoc.valueChanges().subscribe( doc => {
+    this.settingsDocRef = db.collection(database.settingsCollection).doc(database.settingsDocument);
+    this.settingsDocRef.valueChanges().subscribe( doc => {
       console.log(doc);
       this.settings = doc;
     });
 
-    this.schedulesColl = db.collection(database.schedulesCollection);
+    this.schedulesCollRef = db.collection(database.schedulesCollection);
 
   }
 
   saveSettings(): void {
-    this.settingsDoc.update(this.settings).then(res => {
+    this.settingsDocRef.update(this.settings).then(res => {
       console.log('Success');
       this.changed = false;
       this.errorMessage = null;
@@ -80,23 +80,36 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  addOneWeekInSeconds = (dateInSeconds) => {
+  addOneWeekInSeconds(dateInSeconds: number): Date {
     return new Date((dateInSeconds + 7 * 24 * 60 * 60) * 1000);
   }
 
   postponeOneWeek = () => {
-    console.warn('Updating all schedules by one week...');
-    this.schedulesColl.get().forEach((item) => {
-      return item.docs.map(d => {
-        console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
-        return this.db.doc(`schedules/${d.id}`).update(
-          {
-            from: this.addOneWeekInSeconds(d.data().from.seconds),
-            to: this.addOneWeekInSeconds(d.data().to.seconds),
-          }
-        );
+    if (confirm('Are you sure you want to import all schedule events from last week?')) {
+      console.warn('Updating all schedules by one week...');
+      this.schedulesCollRef.get().forEach((item) => {
+        return item.docs.map(d => {
+          console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
+          return this.db.doc(`schedules/${d.id}`).update(
+            {
+              from: this.addOneWeekInSeconds(d.data().from.seconds),
+              to: this.addOneWeekInSeconds(d.data().to.seconds),
+            }
+          );
+        });
       });
-    });
+    }
   }
 
+  deleteAllSchedules(): void {
+    if (confirm('Are you sure you want to delete all schedule events?')) {
+      console.warn('Deleting all schedule events...');
+      this.schedulesCollRef.get().forEach((item) => {
+        item.docs.forEach(d => {
+          console.log('Deleting item: ', d.id);
+          this.db.doc(`schedules/${d.id}`).delete();
+        });
+      });
+    }
+  }
 }
