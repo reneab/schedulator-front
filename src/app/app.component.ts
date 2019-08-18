@@ -7,7 +7,7 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-  title = 'schedulator';
+  title = 'Schedule Master';
   public version: string = environment.VERSION;
 
   constructor() { }
