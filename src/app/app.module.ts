@@ -7,7 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
   MatDialogModule, MatTooltipModule,
   MatChipsModule, MatIconModule, MatTabsModule, MatButtonToggleModule } from '@angular/material';
-import { DataService } from './data.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -64,7 +63,7 @@ const appRoutes: Routes = [
     MatButtonToggleModule
   ],
   entryComponents: [ScheduleInputDialogComponent, ErrorMessageDialogComponent],
-  providers: [DataService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
