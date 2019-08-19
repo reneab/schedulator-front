@@ -48,7 +48,8 @@ export class ScheduleInputDialogComponent implements OnInit {
       batch: new FormControl(this.entry.batch || this.settings.batches[0], Validators.required),
       teacher: new FormControl(this.entry.teacher || this.settings.teachers[0], Validators.required),
       room: new FormControl(this.entry.room || this.settings.rooms[0], Validators.required),
-      subject: new FormControl(this.entry.subject, Validators.required)
+      subject: new FormControl(this.entry.subject, Validators.required),
+      recurring: new FormControl(this.entry.recurring)
     });
   }
 

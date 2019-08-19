@@ -85,14 +85,14 @@ export class CalendarComponent implements OnInit {
     const startDate: Date = new Date(time);
     console.log('Adding event on ', startDate);
     this.openScheduleInputDialog(false, startDate, new ScheduleEntry(startDate, addHours(startDate, 1),
-      this.settings.teachers[0], this.settings.batches[0], this.settings.rooms[0], null),
+      this.settings.teachers[0], this.settings.batches[0], this.settings.rooms[0], null, true),
     );
   }
 
   modifyEvent({ event }: { event: CalendarEvent }): void {
     console.log('Modifying event with ID: ', event.meta.id);
     this.openScheduleInputDialog(true, event.start, new ScheduleEntry(event.start, event.end,
-      event.meta.teacher, event.meta.batch, event.meta.room, event.meta.subject, event.meta.id),
+      event.meta.teacher, event.meta.batch, event.meta.room, event.meta.subject, event.meta.recurring, event.meta.id),
     );
   }
 }

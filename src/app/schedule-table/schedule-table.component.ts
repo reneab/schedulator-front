@@ -62,7 +62,8 @@ export class ScheduleTableComponent implements OnInit {
             batch: data.batch,
             teacher: data.teacher,
             subject: data.subject,
-            room: data.room
+            room: data.room,
+            recurring: data.recurring
           }
         };
         counter++;

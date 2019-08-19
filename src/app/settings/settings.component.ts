@@ -85,10 +85,12 @@ export class SettingsComponent implements OnInit {
   }
 
   postponeOneWeek = () => {
-    if (confirm('Are you sure you want to import all schedule events from last week?')) {
+    if (confirm('Are you sure you want to move all schedule events up one week?')) {
       console.warn('Updating all schedules by one week...');
       this.schedulesCollRef.get().forEach((item) => {
-        return item.docs.map(d => {
+        return item.docs
+        .filter(d => d.data().recurring) // postpone only recurring items
+        .map(d => {
           console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
           return this.db.doc(`schedules/${d.id}`).update(
             {

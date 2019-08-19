@@ -6,5 +6,6 @@ export class ScheduleEntry {
                 public batch: string,
                 public room: string,
                 public subject: string,
+                public recurring: boolean,
                 public id?: string) {}
 }

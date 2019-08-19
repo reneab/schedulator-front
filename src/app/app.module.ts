@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
-  MatDialogModule, MatTooltipModule,
+  MatDialogModule, MatTooltipModule, MatFormFieldModule, MatSlideToggleModule,
   MatChipsModule, MatIconModule, MatTabsModule, MatButtonToggleModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -60,6 +60,8 @@ const appRoutes: Routes = [
     MatChipsModule,
     MatIconModule,
     MatTabsModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
     MatButtonToggleModule
   ],
   entryComponents: [ScheduleInputDialogComponent, ErrorMessageDialogComponent],
