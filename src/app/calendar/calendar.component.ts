@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { format, addDays, addHours, startOfDay } from 'date-fns';
+import { addHours, startOfDay, addWeeks, subWeeks } from 'date-fns';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
 import { ScheduleEntry } from '../ScheduleEntry';
@@ -41,6 +41,14 @@ export class CalendarComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() { }
+
+  goToPreviousWeek(): void {
+    this.viewDate = addWeeks(this.viewDate, 1);
+  }
+
+  goToNextWeek(): void {
+    this.viewDate = addWeeks(this.viewDate, 1);
+  }
 
   onChangeToggle(event): void {
     const value: string = event.value;
