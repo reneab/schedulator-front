@@ -85,23 +85,26 @@ export class ScheduleInputDialogComponent implements OnInit {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
-    // TODO: validate that to is really after from...
-    // checking for schedules conflicts first
-    const conflict: string = this.checkForConflict(element);
-    if (conflict) {
-      console.warn('Schedule conflict for', conflict);
-      this.errorMessage = conflict + ' is already taken';
+    if (isBefore(element.to, element.from)) {
+      this.errorMessage = 'End date if before start date';
     } else {
-      console.log('No conflict found. Updating database...');
-      // save new or update existing
-      const exec: Promise<any> = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
-      exec.then(res => {
-        this.dialogRef.close(true);
-      }).catch(error => {
-        const message = error._body;
-        console.log(message);
-        this.errorMessage = message;
-      });
+      // checking for schedules conflicts first
+      const conflict: string = this.checkForConflict(element);
+      if (conflict) {
+        console.warn('Schedule conflict for', conflict);
+        this.errorMessage = conflict + ' is already taken';
+      } else {
+        console.log('No conflict found. Updating database...');
+        // save new or update existing
+        const exec: Promise<any> = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
+        exec.then(res => {
+          this.dialogRef.close(true);
+        }).catch(error => {
+          const message = error._body;
+          console.log(message);
+          this.errorMessage = message;
+        });
+      }
     }
   }
 
