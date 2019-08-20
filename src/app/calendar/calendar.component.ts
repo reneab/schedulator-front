@@ -43,7 +43,7 @@ export class CalendarComponent implements OnInit {
   ngOnInit() { }
 
   goToPreviousWeek(): void {
-    this.viewDate = addWeeks(this.viewDate, 1);
+    this.viewDate = subWeeks(this.viewDate, 1);
   }
 
   goToNextWeek(): void {
