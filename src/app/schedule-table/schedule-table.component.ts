@@ -55,7 +55,7 @@ export class ScheduleTableComponent implements OnInit {
         const event: CalendarEvent = {
           start: new Date(data.from.seconds * 1000),
           end: new Date(data.to.seconds * 1000),
-          title: '<b>'.concat(data.subject, '</b> ', data.teacher, ', ', data.room),
+          title: `<b>[${data.batch}] ${data.subject}</b> ${data.teacher}, ${data.room}`,
           color: colors[counter % 3],
           meta: {
             id: e.payload.doc.id,
