@@ -1,10 +1,29 @@
 .form-container {
     display: flex;
     flex-direction: column;
+    min-height: 380px;
+
+    div.input-in-row {
+        display: inline-block;
+
+        .time-input {
+            width: 48%;
+            
+            &:first-child {
+                margin-right: 4%;
+            }
+        }
+    }
 
     * {
         width: 100%;
     }
+
+}
+
+p.error {
+    margin: 0 0px;
+    font-size: 14px;
 }
 
 mat-dialog-actions {
