@@ -61,40 +61,47 @@ export class ScheduleInputDialogComponent implements OnInit {
     return d;
   }
 
-  checkForConflict(element: any): string {
-    let conflict: string;
-    this.events.filter(e => e.meta.id !== this.entry.id) // need to not consider existing element (when updating)
-    .forEach(e => {
-      if ((isAfter(element.from, e.start) || isEqual(element.from, e.start)) && isBefore(element.from, e.end)
-      || isAfter(element.to, e.start) && (isBefore(element.to, e.end) || isEqual(element.to, e.end))
-      || isBefore(element.from, e.start) && isAfter(element.to, e.end)) {
-          if (element.batch === e.meta.batch) {
-            conflict = element.batch;
-          }
-          if (element.room === e.meta.room) {
-            conflict = element.room;
-          }
-          if (element.teacher === e.meta.teacher) {
-            conflict = element.teacher;
-          }
-      }
-    });
-    return conflict;
+  isInConflict(schedule: ScheduleEntry, event: CalendarEvent): boolean {
+    const isTimeConflict: boolean =
+      (isAfter(schedule.from, event.start) || isEqual(schedule.from, event.start)) && isBefore(schedule.from, event.end)
+      || isAfter(schedule.to, event.start) && (isBefore(schedule.to, event.end) || isEqual(schedule.to, event.end))
+      || isBefore(schedule.from, event.start) && isAfter(schedule.to, event.end);
+    return isTimeConflict && (schedule.batch === event.meta.batch || schedule.teacher === event.meta.teacher
+      || schedule.room === event.meta.room);
+  }
+
+  returnFirstConflict(scheduleEntry: ScheduleEntry): CalendarEvent {
+    return this.events.filter(e => e.meta.id !== this.entry.id) // need to not consider existing element (when updating)
+      .find(e => this.isInConflict(scheduleEntry, e));
   }
 
   save(element) {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
-    if (isBefore(element.to, element.from)) {
+    const scheduleEntry = new ScheduleEntry(element.from, element.to, element.teacher, element.batch, element.room, element.subject,
+      element.recurring);
+    if (isBefore(scheduleEntry.to, scheduleEntry.from)) {
       this.errorMessage = 'End date if before start date';
       this.scheduleForm.controls.to.setErrors({'before start date': true});
     } else {
       // checking for schedules conflicts first
-      const conflict: string = this.checkForConflict(element);
+      const conflict: CalendarEvent = this.returnFirstConflict(element);
       if (conflict) {
-        console.warn('Schedule conflict for', conflict);
-        this.errorMessage = conflict + ' is already taken';
+        console.warn('Conflict found for event with ID', conflict.meta.id);
+        if (scheduleEntry.batch === conflict.meta.batch) {
+          this.errorMessage = scheduleEntry.batch + ' is already busy';
+          this.scheduleForm.controls.batch.markAsTouched();
+          this.scheduleForm.controls.batch.setErrors({'already taken': true});
+        } else if (scheduleEntry.teacher === conflict.meta.teacher) {
+          this.errorMessage = scheduleEntry.teacher + ' is already busy';
+          this.scheduleForm.controls.teacher.markAsTouched();
+          this.scheduleForm.controls.teacher.setErrors({taken: true});
+        } else if (scheduleEntry.room === conflict.meta.room) {
+          this.errorMessage = scheduleEntry.room + ' is already taken';
+          this.scheduleForm.controls.room.markAsTouched();
+          this.scheduleForm.controls.room.setErrors({taken: true});
+        }
       } else {
         console.log('No conflict found. Updating database...');
         // save new or update existing
