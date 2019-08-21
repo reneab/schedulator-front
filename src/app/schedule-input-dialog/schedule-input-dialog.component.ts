@@ -82,7 +82,7 @@ export class ScheduleInputDialogComponent implements OnInit {
     const scheduleEntry = new ScheduleEntry(element.from, element.to, element.teacher, element.batch, element.room, element.subject,
       element.recurring);
     if (isBefore(scheduleEntry.to, scheduleEntry.from)) {
-      this.errorMessage = 'End date if before start date';
+      this.errorMessage = 'End time is before start time!';
       this.scheduleForm.controls.to.setErrors({'before start date': true});
     } else {
       // checking for schedules conflicts first
