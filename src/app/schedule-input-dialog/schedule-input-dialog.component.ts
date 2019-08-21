@@ -102,6 +102,7 @@ export class ScheduleInputDialogComponent implements OnInit {
           this.scheduleForm.controls.room.markAsTouched();
           this.scheduleForm.controls.room.setErrors({taken: true});
         }
+        this.errorMessage += ' from ' + conflict.start.toLocaleTimeString() + ' to ' + conflict.end.toLocaleTimeString();
       } else {
         console.log('No conflict found. Updating database...');
         // save new or update existing
