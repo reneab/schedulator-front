@@ -65,7 +65,7 @@ export class CalendarComponent implements OnInit {
     this.filteredEvents = this.events.filter(i => this.selectedFilters.indexOf(i.meta[this.filteringKey]) >= 0);
   }
 
-  openScheduleInputDialog(editingMode: boolean, day: Date, data: ScheduleEntry): void {
+  openScheduleInputDialog(editingMode: boolean, day: Date, toDisplay: ScheduleEntry): void {
     const dialogRef = this.dialog.open(ScheduleInputDialogComponent, {
       width: '500px',
       data: {
@@ -73,7 +73,7 @@ export class CalendarComponent implements OnInit {
         events: this.events,
         editing: editingMode,
         day: startOfDay(day),
-        entry: data
+        entry: toDisplay
       }
     });
 
@@ -90,9 +90,15 @@ export class CalendarComponent implements OnInit {
   addEvent(time): void {
     const startDate: Date = new Date(time);
     console.log('Adding event on ', startDate);
-    this.openScheduleInputDialog(false, startDate, new ScheduleEntry(startDate, addHours(startDate, 1),
-      this.settings.teachers[0], this.settings.batches[0], this.settings.rooms[0], null, true),
-    );
+    const nbOfActiveToggles = this.selectedFilters.length;
+    const toDisplay = new ScheduleEntry(startDate, addHours(startDate, 1),
+      // so that the default event has data from the last activate toggle
+      this.filteringKey === 'teacher' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.teachers[0],
+      this.filteringKey === 'batch' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.batches[0],
+      this.filteringKey === 'room' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.rooms[0],
+      null,
+      true);
+    this.openScheduleInputDialog(false, startDate, toDisplay);
   }
 
   modifyEvent({ event }: { event: CalendarEvent }): void {
