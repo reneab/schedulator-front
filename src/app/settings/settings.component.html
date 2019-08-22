@@ -5,7 +5,6 @@
     <p class="error">{{errorMessage}}</p>
     <mat-icon class="success" *ngIf="saved">check_circle</mat-icon>
     <button mat-raised-button color="accent" [disabled]='!changed' (click)="saveSettings()">Save</button>  
-    <button mat-raised-button color="primary" [routerLink]="['/']">Home</button>  
   </mat-toolbar-row>
 </mat-toolbar>
 

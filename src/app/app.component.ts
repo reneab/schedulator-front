@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MatIconRegistry} from '@angular/material';
 import { environment } from '../environments/environment';
 
 @Component({
