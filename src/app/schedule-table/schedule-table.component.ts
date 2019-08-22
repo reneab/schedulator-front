@@ -4,21 +4,38 @@ import { ErrorMessageDialogComponent } from '../error-message-dialog/error-messa
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { database } from 'src/environments/environment';
 import { CalendarEvent } from 'angular-calendar';
+import { EventColor } from 'calendar-utils';
 
-const colors = [
-  { // red
+const colors = {
+  red: { // red
     primary: '#ad2121',
     secondary: '#FAE3E3'
   },
-  { // blue
+  blue: { // blue
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
-  { // yellow
+  yellow: { // yellow
     primary: '#e3bc08',
     secondary: '#FDF1BA'
+  },
+  pink: { // pink
+    primary: '#f146db',
+    secondary: '#ffdffb'
+  },
+  orange: { // orange
+    primary: '#f59a39',
+    secondary: '#fbdcbb'
+  },
+  green: { // green
+    primary: '#4ff739',
+    secondary: '#dffddb'
+  },
+  purple: { // purple
+    primary: '#673AB7',
+    secondary: '#d9c7f9'
   }
-];
+};
 
 @Component({
   selector: 'app-schedule-table',
@@ -48,7 +65,6 @@ export class ScheduleTableComponent implements OnInit {
     console.log('Loading schedule events...');
     this.eventsColRef.snapshotChanges().subscribe( items => {
       console.log('Retreived from Firestore: ', items);
-      let counter = 0; // just for coloring TODO: find a better solution
       this.events = items.map(e => {
         // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
         const data = e.payload.doc.data();
@@ -56,7 +72,7 @@ export class ScheduleTableComponent implements OnInit {
           start: new Date(data.from.seconds * 1000),
           end: new Date(data.to.seconds * 1000),
           title: `<b>[${data.batch}] ${data.subject}</b> ${data.teacher}, ${data.room}`,
-          color: colors[counter % 3],
+          color: this.getColorForSubject(data.subject),
           meta: {
             id: e.payload.doc.id,
             batch: data.batch,
@@ -66,7 +82,6 @@ export class ScheduleTableComponent implements OnInit {
             recurring: data.recurring
           }
         };
-        counter++;
         console.log('Loaded event:', event);
         return event;
       });
@@ -81,4 +96,15 @@ export class ScheduleTableComponent implements OnInit {
     });
   }
 
+  /* tslint:disable */
+  getColorForSubject(subject: string): EventColor {
+    // TODO: put this as a setting configuration
+    if (subject.toLowerCase().indexOf('java') >= 0) { return colors.blue; }
+    else if (subject.toLowerCase().indexOf('web') >= 0) { return colors.purple; }
+    else if (subject.toLowerCase().indexOf('data') >= 0) { return colors.orange; }
+    else if (subject.toLowerCase().indexOf('network') >= 0) { return colors.red; }
+    else if (subject.toLowerCase().indexOf('study') >= 0) { return colors.pink; }
+    else if (subject.toLowerCase().indexOf('plt') >= 0) { return colors.green; }
+    else { return colors.yellow; }
+  }
 }
