@@ -3,14 +3,16 @@
 <form [formGroup]="scheduleForm">
   <mat-dialog-content>
     <div class="form-container">
-    <mat-form-field>
-      <mat-label>Starting at</mat-label>
-      <input matInput type="time" formControlName="from" required>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Until</mat-label>
-      <input matInput type="time" formControlName="to" required>
-    </mat-form-field>
+      <div class="input-in-row">
+        <mat-form-field class="time-input">
+          <mat-label>Starting at</mat-label>
+          <input matInput type="time" formControlName="from" required>
+        </mat-form-field>
+        <mat-form-field class="time-input">
+          <mat-label>Until</mat-label>
+          <input matInput type="time" formControlName="to" required>
+        </mat-form-field>
+      </div>
     <mat-form-field>
       <mat-label>Batch</mat-label>
       <mat-select formControlName="batch">
@@ -32,13 +34,13 @@
     <mat-form-field>
       <input matInput type="text" formControlName="subject" placeholder="Subject" required>
     </mat-form-field>
+    <mat-slide-toggle formControlName="recurring" color="primary">Recurring?</mat-slide-toggle>
   </div>
 </mat-dialog-content>
-<mat-slide-toggle formControlName="recurring" color="accent">Recurring?</mat-slide-toggle>
-<mat-dialog-actions>
-    <button mat-raised-button color="primary" [disabled]="!scheduleForm.valid || !scheduleForm.dirty" (click)="save(scheduleForm.getRawValue())">Save</button>
-    <button mat-raised-button color="warn" *ngIf="editingMode" (click)="delete()">Delete</button>
-    <button mat-button mat-dialog-close>Close</button>
-  </mat-dialog-actions>
-</form>
 <p class="error">{{errorMessage}}</p>
+<mat-dialog-actions>
+  <button mat-raised-button color="accent" [disabled]="!scheduleForm.valid || !scheduleForm.dirty" (click)="save(scheduleForm.getRawValue())">Save</button>
+  <button mat-raised-button color="warn" *ngIf="editingMode" (click)="delete()">Delete</button>
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
+</form>

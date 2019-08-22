@@ -65,10 +65,8 @@ export class CalendarComponent implements OnInit {
     this.filteredEvents = this.events.filter(i => this.selectedFilters.indexOf(i.meta[this.filteringKey]) >= 0);
   }
 
-  // util function
   openScheduleInputDialog(editingMode: boolean, day: Date, data: ScheduleEntry): void {
     const dialogRef = this.dialog.open(ScheduleInputDialogComponent, {
-      height: '550px',
       width: '500px',
       data: {
         settings: this.settings,
