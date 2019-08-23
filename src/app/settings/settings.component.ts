@@ -19,7 +19,7 @@ export class SettingsComponent implements OnInit {
   errorMessage: string;
 
   settingsDocRef: AngularFirestoreDocument<any>;
-  settings: any = {};
+  settings: any = {colors: {}};
 
   schedulesCollRef: AngularFirestoreCollection<any>;
 
@@ -52,24 +52,23 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  remove(el: string, settingName: string): void {
-    console.log('Removing ' + el + ' from setting ' + settingName);
-    const index = this.settings[settingName].indexOf(el);
-    if (index >= 0) {
-      this.settings[settingName].splice(index, 1);
-      this.changed = true;
-      this.saved = false;
-    }
+  remove(el: string, pathToSetting: string): void {
+    console.log('Removing ' + el + ' from setting ' + pathToSetting);
+    const arr = pathToSetting.split('.').reduce((p, prop) => p[prop], this.settings);
+    arr.splice(arr.indexOf(el), 1);
+    this.changed = true;
+    this.saved = false;
   }
 
-  add(event: MatChipInputEvent, settingName: string): void {
+  add(event: MatChipInputEvent, pathToSetting: string): void {
     const input = event.input;
     const value = event.value;
 
     // Add value to corresponding array
     if ((value || '').trim()) {
-      console.log('Adding ' + value + ' to setting ' + settingName);
-      this.settings[settingName].push(value.trim());
+      console.log('Adding ' + value + ' to setting ' + pathToSetting);
+      const arr = pathToSetting.split('.').reduce((p, prop) => p[prop], this.settings);
+      arr.push(value.trim());
       this.changed = true;
       this.saved = false;
     }
