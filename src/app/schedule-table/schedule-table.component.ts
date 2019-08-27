@@ -6,7 +6,7 @@ import { database } from 'src/environments/environment';
 import { CalendarEvent } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
 
-const colors = {
+const myColors = {
   red: { // red
     primary: '#ad2121',
     secondary: '#FAE3E3'
@@ -47,7 +47,7 @@ export class ScheduleTableComponent implements OnInit {
 
   settingsColRef: AngularFirestoreCollection<any>;
   eventsColRef: AngularFirestoreCollection<any>;
-  settings: any = {};
+  settings: any = { colors: {} };
   events: CalendarEvent[];
 
   constructor(public db: AngularFirestore, public dialog: MatDialog) {
@@ -96,15 +96,17 @@ export class ScheduleTableComponent implements OnInit {
     });
   }
 
-  /* tslint:disable */
   getColorForSubject(subject: string): EventColor {
-    // TODO: put this as a setting configuration
-    if (subject.toLowerCase().indexOf('java') >= 0) { return colors.blue; }
-    else if (subject.toLowerCase().indexOf('web') >= 0) { return colors.purple; }
-    else if (subject.toLowerCase().indexOf('data') >= 0) { return colors.orange; }
-    else if (subject.toLowerCase().indexOf('network') >= 0) { return colors.red; }
-    else if (subject.toLowerCase().indexOf('study') >= 0) { return colors.pink; }
-    else if (subject.toLowerCase().indexOf('plt') >= 0) { return colors.green; }
-    else { return colors.yellow; }
+    if (!this.settings.colors || Object.keys(this.settings.colors).length == 0) {
+      return myColors.blue; // default
+    } else {
+      for (const color in this.settings.colors) {
+        // look for one entry in settings.colors that is contained in the subject title
+        if (this.settings.colors[color].find(str => subject.toLowerCase().indexOf(str) >= 0)) {
+          return myColors[color];
+        }
+      }
+      return myColors.blue; // default
+    }
   }
 }
