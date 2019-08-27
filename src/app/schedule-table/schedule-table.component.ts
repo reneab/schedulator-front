@@ -49,6 +49,7 @@ export class ScheduleTableComponent implements OnInit {
   eventsColRef: AngularFirestoreCollection<any>;
   settings: any = { colors: {} };
   events: CalendarEvent[];
+  loading: boolean; // use for a loading spinner in calendar component
 
   constructor(public db: AngularFirestore, public dialog: MatDialog) {
     this.settingsColRef = db.collection(environment.firebase.firestore.settingsCollection);
@@ -57,6 +58,7 @@ export class ScheduleTableComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Loading settings...');
+    this.loading = true;
     this.settingsColRef.doc(environment.firebase.firestore.settingsDocument).valueChanges().subscribe(doc => {
       this.settings = doc;
       console.log('Initialized with settings', this.settings);
@@ -85,6 +87,9 @@ export class ScheduleTableComponent implements OnInit {
           console.log('Loaded event:', event);
           return event;
         });
+
+        console.log('Done');
+        this.loading = false;
       });
     });
   }

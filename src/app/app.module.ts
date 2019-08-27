@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
+import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule, MatProgressSpinnerModule,
   MatDialogModule, MatTooltipModule, MatFormFieldModule, MatSlideToggleModule,
   MatChipsModule, MatIconModule, MatTabsModule, MatButtonToggleModule } from '@angular/material';
 
@@ -60,7 +60,8 @@ const appRoutes: Routes = [
     MatTabsModule,
     MatFormFieldModule,
     MatSlideToggleModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatProgressSpinnerModule
   ],
   entryComponents: [ScheduleInputDialogComponent, ErrorMessageDialogComponent],
   providers: [],
