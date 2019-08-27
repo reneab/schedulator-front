@@ -5,7 +5,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 import { ScheduleEntry } from '../ScheduleEntry';
 import { format, addHours, addMinutes, isBefore, isAfter, startOfDay, isEqual } from 'date-fns';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { database } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { CalendarEvent } from 'calendar-utils';
 
 @Component({
@@ -29,7 +29,7 @@ export class ScheduleInputDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ScheduleInputDialogComponent>,
               public db: AngularFirestore,
               @Inject(MAT_DIALOG_DATA) public data: any) {
-                this.eventsDBColl = db.collection(database.schedulesCollection);
+                this.eventsDBColl = db.collection(environment.firebase.firestore.schedulesCollection);
                 this.settings = data.settings;
                 this.events = data.events;
                 this.editingMode = data.editing;

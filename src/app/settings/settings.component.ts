@@ -4,7 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { database } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -25,14 +25,15 @@ export class SettingsComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    this.settingsDocRef = db.collection(database.settingsCollection).doc(database.settingsDocument);
+    this.settingsDocRef = db.collection(environment.firebase.firestore.settingsCollection)
+      .doc(environment.firebase.firestore.settingsDocument);
+
     this.settingsDocRef.valueChanges().subscribe( doc => {
       console.log(doc);
       this.settings = doc;
     });
 
-    this.schedulesCollRef = db.collection(database.schedulesCollection);
-
+    this.schedulesCollRef = db.collection(environment.firebase.firestore.schedulesCollection);
   }
 
   saveSettings(): void {
@@ -90,7 +91,7 @@ export class SettingsComponent implements OnInit {
         .filter(d => d.data().recurring) // postpone only recurring items
         .map(d => {
           console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
-          return this.db.doc(database.schedulesCollection + '/' + d.id).update(
+          return this.db.doc(environment.firebase.firestore.schedulesCollection + '/' + d.id).update(
             {
               from: this.addOneWeekInSeconds(d.data().from.seconds),
               to: this.addOneWeekInSeconds(d.data().to.seconds),
@@ -107,7 +108,7 @@ export class SettingsComponent implements OnInit {
       this.schedulesCollRef.get().forEach((item) => {
         item.docs.forEach(d => {
           console.log('Deleting item: ', d.id);
-          this.db.doc(database.schedulesCollection + '/' + d.id).delete();
+          this.db.doc(environment.firebase.firestore.schedulesCollection + '/' + d.id).delete();
         });
       });
     }

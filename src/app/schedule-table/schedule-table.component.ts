@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ErrorMessageDialogComponent } from '../error-message-dialog/error-message-dialog.component';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { database } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { CalendarEvent } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
 
@@ -51,13 +51,13 @@ export class ScheduleTableComponent implements OnInit {
   events: CalendarEvent[];
 
   constructor(public db: AngularFirestore, public dialog: MatDialog) {
-    this.settingsColRef = db.collection(database.settingsCollection);
-    this.eventsColRef = db.collection(database.schedulesCollection);
+    this.settingsColRef = db.collection(environment.firebase.firestore.settingsCollection);
+    this.eventsColRef = db.collection(environment.firebase.firestore.schedulesCollection);
   }
 
   ngOnInit(): void {
     console.log('Loading settings...');
-    this.settingsColRef.doc(database.settingsDocument).valueChanges().subscribe(doc => {
+    this.settingsColRef.doc(environment.firebase.firestore.settingsDocument).valueChanges().subscribe(doc => {
       this.settings = doc;
       console.log('Initialized with settings', this.settings);
 
