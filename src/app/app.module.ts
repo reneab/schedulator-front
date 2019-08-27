@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
-import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule,
   MatDialogModule, MatTooltipModule, MatFormFieldModule, MatSlideToggleModule,
@@ -43,7 +42,6 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
-    HttpModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
