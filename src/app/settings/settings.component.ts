@@ -5,7 +5,6 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { database } from 'src/environments/environment';
-import { ScheduleEntry } from '../ScheduleEntry';
 
 @Component({
   selector: 'app-settings',
@@ -91,7 +90,7 @@ export class SettingsComponent implements OnInit {
         .filter(d => d.data().recurring) // postpone only recurring items
         .map(d => {
           console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
-          return this.db.doc(`schedules/${d.id}`).update(
+          return this.db.doc(database.schedulesCollection + '/' + d.id).update(
             {
               from: this.addOneWeekInSeconds(d.data().from.seconds),
               to: this.addOneWeekInSeconds(d.data().to.seconds),
@@ -108,7 +107,7 @@ export class SettingsComponent implements OnInit {
       this.schedulesCollRef.get().forEach((item) => {
         item.docs.forEach(d => {
           console.log('Deleting item: ', d.id);
-          this.db.doc(`schedules/${d.id}`).delete();
+          this.db.doc(database.schedulesCollection + '/' + d.id).delete();
         });
       });
     }
