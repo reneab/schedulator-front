@@ -9,7 +9,7 @@ import { EventColor } from 'calendar-utils';
 const myColors = {
   red: {
     primary: '#ad2121',
-    secondary: '#FAE3E3'
+    secondary: '#fbc2c2'
   },
   blue: {
     primary: '#1e90ff',
@@ -97,7 +97,7 @@ export class ScheduleTableComponent implements OnInit {
   }
 
   getColorForSubject(subject: string): EventColor {
-    if (!this.settings.colors || Object.keys(this.settings.colors).length == 0) {
+    if (!this.settings.colors || Object.keys(this.settings.colors).length === 0) {
       return myColors.blue; // default
     } else {
       for (const color in this.settings.colors) {
