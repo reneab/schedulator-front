@@ -34,6 +34,18 @@ const myColors = {
   purple: {
     primary: '#673AB7',
     secondary: '#d9c7f9'
+  },
+  bluegrey: {
+    primary: '#4e728e',
+    secondary: '#accae2'
+  },
+  maroon: {
+    primary: '#ba826d',
+    secondary: '#eeded8'
+  },
+  grey: {
+    primary: '#6b6b6a',
+    secondary: '#cecdcc'
   }
 };
 
@@ -104,7 +116,7 @@ export class ScheduleTableComponent implements OnInit {
 
   getColorForSubject(subject: string): EventColor {
     if (!this.settings.colors || Object.keys(this.settings.colors).length === 0) {
-      return myColors.blue; // default
+      return myColors.grey; // default
     } else {
       for (const color in this.settings.colors) {
         // look for one entry in settings.colors that is contained in the subject title
@@ -112,7 +124,7 @@ export class ScheduleTableComponent implements OnInit {
           return myColors[color];
         }
       }
-      return myColors.blue; // default
+      return myColors.grey; // default
     }
   }
 }
