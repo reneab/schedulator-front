@@ -7,31 +7,31 @@ import { CalendarEvent } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
 
 const myColors = {
-  red: { // red
+  red: {
     primary: '#ad2121',
     secondary: '#FAE3E3'
   },
-  blue: { // blue
+  blue: {
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
-  yellow: { // yellow
+  yellow: {
     primary: '#e3bc08',
     secondary: '#FDF1BA'
   },
-  pink: { // pink
+  pink: {
     primary: '#f146db',
     secondary: '#ffdffb'
   },
-  orange: { // orange
+  orange: {
     primary: '#f59a39',
     secondary: '#fbdcbb'
   },
-  green: { // green
+  green: {
     primary: '#4ff739',
     secondary: '#dffddb'
   },
-  purple: { // purple
+  purple: {
     primary: '#673AB7',
     secondary: '#d9c7f9'
   }
@@ -57,33 +57,33 @@ export class ScheduleTableComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Loading settings...');
-    this.settingsColRef.doc(database.settingsDocument).valueChanges().subscribe( doc => {
+    this.settingsColRef.doc(database.settingsDocument).valueChanges().subscribe(doc => {
       this.settings = doc;
       console.log('Initialized with settings', this.settings);
-    });
 
-    console.log('Loading schedule events...');
-    this.eventsColRef.snapshotChanges().subscribe( items => {
-      console.log('Retreived from Firestore: ', items);
-      this.events = items.map(e => {
-        // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
-        const data = e.payload.doc.data();
-        const event: CalendarEvent = {
-          start: new Date(data.from.seconds * 1000),
-          end: new Date(data.to.seconds * 1000),
-          title: `<b>[${data.batch}] ${data.subject}</b> ${data.teacher}, ${data.room}`,
-          color: this.getColorForSubject(data.subject),
-          meta: {
-            id: e.payload.doc.id,
-            batch: data.batch,
-            teacher: data.teacher,
-            subject: data.subject,
-            room: data.room,
-            recurring: data.recurring
-          }
-        };
-        console.log('Loaded event:', event);
-        return event;
+      console.log('Loading schedule events...');
+      this.eventsColRef.snapshotChanges().subscribe(items => {
+        console.log('Retreived from Firestore: ', items);
+        this.events = items.map(e => {
+          // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
+          const data = e.payload.doc.data();
+          const event: CalendarEvent = {
+            start: new Date(data.from.seconds * 1000),
+            end: new Date(data.to.seconds * 1000),
+            title: `<b>[${data.batch}] ${data.subject}</b> ${data.teacher}, ${data.room}`,
+            color: this.getColorForSubject(data.subject),
+            meta: {
+              id: e.payload.doc.id,
+              batch: data.batch,
+              teacher: data.teacher,
+              subject: data.subject,
+              room: data.room,
+              recurring: data.recurring
+            }
+          };
+          console.log('Loaded event:', event);
+          return event;
+        });
       });
     });
   }
@@ -92,7 +92,7 @@ export class ScheduleTableComponent implements OnInit {
     this.dialog.open(ErrorMessageDialogComponent, {
       height: '180px',
       width: '350px',
-      data: {errorMessage: message}
+      data: { errorMessage: message }
     });
   }
 
