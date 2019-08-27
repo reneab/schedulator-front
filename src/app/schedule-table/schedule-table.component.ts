@@ -70,8 +70,9 @@ export class ScheduleTableComponent implements OnInit {
           const event: CalendarEvent = {
             start: new Date(data.from.seconds * 1000),
             end: new Date(data.to.seconds * 1000),
-            title: `<b>[${data.batch}] ${data.subject}</b> ${data.teacher}, ${data.room}`,
+            title: `<b>(${data.batch}) ${data.subject}</b><br>${data.teacher}<br>${data.room}`,
             color: this.getColorForSubject(data.subject),
+            cssClass: 'my-custom-event-class',
             meta: {
               id: e.payload.doc.id,
               batch: data.batch,

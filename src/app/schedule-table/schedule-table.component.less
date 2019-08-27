@@ -1,45 +1,5 @@
-// to allow for table head to be sticky
-.mat-tab-body-wrapper, .mat-tab-body, .mat-tab-body-content {
-    overflow: visible !important;
-}
-
-table {
-    width: auto;
-    margin: 1% auto;
-
-    thead {
-        display: block;
-        position: sticky;
-        top: 47px;
-        z-index: 1;
-
-        th {
-            background-color: #26A69A; // Teal 400 from Material Color Palettes
-            color: white;
-            font-weight: bold;
-        }
-    }
-
-    tbody {
-        display: block;
-        overflow: auto;
-        tr:hover {background-color: #f5f5f5;}
-    }
-
-    td, th {
-        width: 120px;
-        height: 50px;
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-
-        // necessary for it to have a width and trigger the hover event
-        app-empty-tile, app-schedule-tile {
-            height: 100%;
-            display: block;
-        }
-
-        &.row-title {
-            text-align: left;
-        }
-    }
+.cal-week-view .my-custom-event-class .cal-event {
+    line-height: 17px;
+    font-size: 13.5px;
+    color: #3a88d4;
 }
