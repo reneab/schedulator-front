@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 })
 export class SettingsComponent implements OnInit {
 
+  toggleColorEdit = false; // used for displaying color schemes editing
   changed = false; // used for disabling Save button
   saved = false; // used for displaying success icon
   errorMessage: string;

@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatToolbarModule, MatProgressSpinnerModule,
-  MatDialogModule, MatTooltipModule, MatFormFieldModule, MatSlideToggleModule,
+  MatDialogModule, MatTooltipModule, MatFormFieldModule, MatSlideToggleModule, MatDividerModule,
   MatChipsModule, MatIconModule, MatTabsModule, MatButtonToggleModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -61,7 +61,8 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDividerModule
   ],
   entryComponents: [ScheduleInputDialogComponent, ErrorMessageDialogComponent],
   providers: [],

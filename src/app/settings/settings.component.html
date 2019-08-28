@@ -45,6 +45,24 @@
   </mat-chip-list>
 </mat-form-field>
 
+<mat-divider></mat-divider>
+<button *ngIf="!toggleColorEdit" mat-raised-button class="margin2pct" color="primary" (click)="toggleColorEdit = !toggleColorEdit">Edit color keymap</button>
+<button *ngIf="toggleColorEdit" mat-stroked-button class="margin2pct" color="primary" (click)="toggleColorEdit = !toggleColorEdit">Hide section</button>
+<div *ngIf="toggleColorEdit">
+  <mat-form-field class="chip-list" *ngFor="let item of settings.colors | keyvalue">
+    <mat-chip-list #colorList>
+      <mat-chip *ngFor="let s of item.value" removable (removed)="remove(el, 'colors.' + item.key)">
+        {{s}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input [placeholder]="item.key"
+              [matChipInputFor]="colorList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event, 'colors.' + item.key)">
+    </mat-chip-list>
+  </mat-form-field>
+</div>
+
 <mat-toolbar>
   <mat-toolbar-row>
     <span class="spacer"></span>
