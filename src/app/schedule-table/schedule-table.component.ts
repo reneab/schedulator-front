@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ErrorMessageDialogComponent } from '../error-message-dialog/error-message-dialog.component';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
 import { CalendarEvent } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
+import { ScheduleFirestoreService } from '../schedule-firestore.service';
+import { SettingsFirestoreService } from '../settings-firestore.service';
 
 const myColors = {
   red: {
@@ -57,26 +57,23 @@ const myColors = {
 })
 export class ScheduleTableComponent implements OnInit {
 
-  settingsColRef: AngularFirestoreCollection<any>;
-  eventsColRef: AngularFirestoreCollection<any>;
   settings: any = { colors: {} };
   events: CalendarEvent[];
   loading: boolean; // use for a loading spinner in calendar component
 
-  constructor(public db: AngularFirestore, public dialog: MatDialog) {
-    this.settingsColRef = db.collection(environment.firebase.firestore.settingsCollection);
-    this.eventsColRef = db.collection(environment.firebase.firestore.schedulesCollection);
-  }
+  constructor(public settingsFsService: SettingsFirestoreService,
+              public scheduleFsService: ScheduleFirestoreService,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
     console.log('Loading settings...');
     this.loading = true;
-    this.settingsColRef.doc(environment.firebase.firestore.settingsDocument).valueChanges().subscribe(doc => {
+    this.settingsFsService.getSettings().subscribe(doc => {
       this.settings = doc;
       console.log('Initialized with settings', this.settings);
 
       console.log('Loading schedule events...');
-      this.eventsColRef.snapshotChanges().subscribe(items => {
+      this.scheduleFsService.getScheduleEvents().subscribe(items => {
         console.log('Retreived from Firestore: ', items);
         this.events = items.map(e => {
           // TODO: convert data to ScheduleEntry, and from there to calendar event using another function

@@ -4,9 +4,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import { ScheduleEntry } from '../ScheduleEntry';
 import { format, addHours, addMinutes, isBefore, isAfter, startOfDay, isEqual } from 'date-fns';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
 import { CalendarEvent } from 'calendar-utils';
+import { ScheduleFirestoreService } from '../schedule-firestore.service';
 
 @Component({
   selector: 'app-schedule-input-dialog',
@@ -14,8 +13,6 @@ import { CalendarEvent } from 'calendar-utils';
   styleUrls: ['./schedule-input-dialog.component.less']
 })
 export class ScheduleInputDialogComponent implements OnInit {
-
-  eventsDBColl: AngularFirestoreCollection<any>;
 
   editingMode: boolean; // creation of new entry or editing existing
   scheduleForm: FormGroup;
@@ -27,9 +24,8 @@ export class ScheduleInputDialogComponent implements OnInit {
   errorMessage: string;
 
   constructor(public dialogRef: MatDialogRef<ScheduleInputDialogComponent>,
-              public db: AngularFirestore,
+              public scheduleFsService: ScheduleFirestoreService,
               @Inject(MAT_DIALOG_DATA) public data: any) {
-                this.eventsDBColl = db.collection(environment.firebase.firestore.schedulesCollection);
                 this.settings = data.settings;
                 this.events = data.events;
                 this.editingMode = data.editing;
@@ -79,14 +75,14 @@ export class ScheduleInputDialogComponent implements OnInit {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
-    const scheduleEntry = new ScheduleEntry(element.from, element.to, element.teacher, element.batch, element.room, element.subject,
-      element.recurring);
-    if (isBefore(scheduleEntry.to, scheduleEntry.from)) {
+    if (isBefore(element.to, element.from)) {
       this.errorMessage = 'End time is before start time!';
       this.scheduleForm.controls.to.setErrors({'before start date': true});
     } else {
       // checking for schedules conflicts first
-      const conflict: CalendarEvent = this.returnFirstConflict(element);
+      const scheduleEntry = new ScheduleEntry(element.from, element.to, element.teacher, element.batch, element.room, element.subject,
+        element.recurring);
+      const conflict: CalendarEvent = this.returnFirstConflict(scheduleEntry);
       if (conflict) {
         console.warn('Conflict found for event with ID', conflict.meta.id);
         if (scheduleEntry.batch === conflict.meta.batch) {
@@ -106,8 +102,9 @@ export class ScheduleInputDialogComponent implements OnInit {
       } else {
         console.log('No conflict found. Updating database...');
         // save new or update existing
-        const exec: Promise<any> = this.editingMode ? this.eventsDBColl.doc(this.entry.id).update(element) : this.eventsDBColl.add(element);
-        exec.then(res => {
+        (this.editingMode ? this.scheduleFsService.updateScheduleEvent(this.entry.id, element) :
+          this.scheduleFsService.createScheduleEvent(element))
+        .then(res => {
           this.dialogRef.close(true);
         }).catch(error => {
           const message = error._body;
@@ -120,7 +117,7 @@ export class ScheduleInputDialogComponent implements OnInit {
 
   delete() {
     console.log('Deleting entry with ID: ' + this.entry.id);
-    this.eventsDBColl.doc(this.entry.id).delete()
+    this.scheduleFsService.deleteScheduleEvent(this.entry.id)
       .then(res => {
         this.dialogRef.close(true);
       }).catch(error => {

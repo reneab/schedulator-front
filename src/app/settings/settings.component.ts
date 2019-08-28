@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {MatChipInputEvent, MatIconRegistry} from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
+import { addWeeks, subWeeks } from 'date-fns';
+import { SettingsFirestoreService } from '../settings-firestore.service';
+import { ScheduleFirestoreService } from '../schedule-firestore.service';
 
 @Component({
   selector: 'app-settings',
@@ -13,36 +13,31 @@ import { environment } from 'src/environments/environment';
 })
 export class SettingsComponent implements OnInit {
 
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
   toggleColorEdit = false; // used for displaying color schemes editing
   changed = false; // used for disabling Save button
   saved = false; // used for displaying success icon
   loading: boolean; // used to display loading spinner
   errorMessage: string;
 
-  settingsDocRef: AngularFirestoreDocument<any>;
   settings: any = {colors: {}};
 
-  schedulesCollRef: AngularFirestoreCollection<any>;
+  constructor(public settingsFsService: SettingsFirestoreService,
+              public scheduleFsService: ScheduleFirestoreService,
+              public iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) { }
 
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-
-  constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  ngOnInit(): void {
     this.loading = true;
-    this.schedulesCollRef = db.collection(environment.firebase.firestore.schedulesCollection);
-
-    this.settingsDocRef = db.collection(environment.firebase.firestore.settingsCollection)
-      .doc(environment.firebase.firestore.settingsDocument);
-
-    this.settingsDocRef.valueChanges().subscribe( doc => {
-      console.log(doc);
+    this.settingsFsService.getSettings().subscribe(doc => {
+      console.log('Loaded settings', doc);
       this.settings = doc;
       this.loading = false;
     });
-
   }
 
   saveSettings(): void {
-    this.settingsDocRef.update(this.settings).then(res => {
+    this.settingsFsService.updateSettings(this.settings).then(res => {
       console.log('Success');
       this.changed = false;
       this.errorMessage = null;
@@ -54,8 +49,6 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
 
   remove(el: string, pathToSetting: string): void {
     console.log('Removing ' + el + ' from setting ' + pathToSetting);
@@ -84,22 +77,22 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  addOneWeekInSeconds(dateInSeconds: number): Date {
-    return new Date((dateInSeconds + 7 * 24 * 60 * 60) * 1000);
+  addOneWeekToTimeStamp(dateInSeconds: number): Date {
+    return addWeeks(new Date(dateInSeconds * 1000), 1);
   }
 
-  postponeOneWeek = () => {
+  postponeOneWeek() {
     if (confirm('Are you sure you want to move all schedule events up one week?')) {
       console.warn('Updating all schedules by one week...');
-      this.schedulesCollRef.get().forEach((item) => {
-        return item.docs
+      this.scheduleFsService.getEventsAsSnapshot().forEach((item) => {
+        item.docs
         .filter(d => d.data().recurring) // postpone only recurring items
-        .map(d => {
+        .forEach(d => {
           console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
-          return this.db.doc(environment.firebase.firestore.schedulesCollection + '/' + d.id).update(
+          this.scheduleFsService.updateScheduleEvent(d.id,
             {
-              from: this.addOneWeekInSeconds(d.data().from.seconds),
-              to: this.addOneWeekInSeconds(d.data().to.seconds),
+              from: this.addOneWeekToTimeStamp(d.data().from.seconds),
+              to: this.addOneWeekToTimeStamp(d.data().to.seconds),
             }
           );
         });
@@ -110,10 +103,10 @@ export class SettingsComponent implements OnInit {
   deleteAllSchedules(): void {
     if (confirm('Are you sure you want to delete all schedule events?')) {
       console.warn('Deleting all schedule events...');
-      this.schedulesCollRef.get().forEach((item) => {
+      this.scheduleFsService.getEventsAsSnapshot().forEach((item) => {
         item.docs.forEach(d => {
           console.log('Deleting item: ', d.id);
-          this.db.doc(environment.firebase.firestore.schedulesCollection + '/' + d.id).delete();
+          this.scheduleFsService.deleteScheduleEvent(d.id);
         });
       });
     }
