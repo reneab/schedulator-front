@@ -16,6 +16,7 @@ export class SettingsComponent implements OnInit {
   toggleColorEdit = false; // used for displaying color schemes editing
   changed = false; // used for disabling Save button
   saved = false; // used for displaying success icon
+  loading: boolean; // used to display loading spinner
   errorMessage: string;
 
   settingsDocRef: AngularFirestoreDocument<any>;
@@ -26,15 +27,18 @@ export class SettingsComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(public db: AngularFirestore, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    this.loading = true;
+    this.schedulesCollRef = db.collection(environment.firebase.firestore.schedulesCollection);
+
     this.settingsDocRef = db.collection(environment.firebase.firestore.settingsCollection)
       .doc(environment.firebase.firestore.settingsDocument);
 
     this.settingsDocRef.valueChanges().subscribe( doc => {
       console.log(doc);
       this.settings = doc;
+      this.loading = false;
     });
 
-    this.schedulesCollRef = db.collection(environment.firebase.firestore.schedulesCollection);
   }
 
   saveSettings(): void {
