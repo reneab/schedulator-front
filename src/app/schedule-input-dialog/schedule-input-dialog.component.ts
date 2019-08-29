@@ -6,6 +6,7 @@ import { ScheduleEntry } from '../ScheduleEntry';
 import { format, addHours, addMinutes, isBefore, isAfter, startOfDay, isEqual } from 'date-fns';
 import { CalendarEvent } from 'calendar-utils';
 import { ScheduleFirestoreService } from '../schedule-firestore.service';
+import { ScheduleUtilService } from '../schedule-util.service';
 
 @Component({
   selector: 'app-schedule-input-dialog',
@@ -25,6 +26,7 @@ export class ScheduleInputDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ScheduleInputDialogComponent>,
               public scheduleFsService: ScheduleFirestoreService,
+              public scheduleUtil: ScheduleUtilService,
               @Inject(MAT_DIALOG_DATA) public data: any) {
                 this.settings = data.settings;
                 this.events = data.events;
@@ -57,61 +59,36 @@ export class ScheduleInputDialogComponent implements OnInit {
     return d;
   }
 
-  isInConflict(schedule: ScheduleEntry, event: CalendarEvent): boolean {
-    const isTimeConflict: boolean =
-      (isAfter(schedule.from, event.start) || isEqual(schedule.from, event.start)) && isBefore(schedule.from, event.end)
-      || isAfter(schedule.to, event.start) && (isBefore(schedule.to, event.end) || isEqual(schedule.to, event.end))
-      || isBefore(schedule.from, event.start) && isAfter(schedule.to, event.end);
-    return isTimeConflict && (schedule.batch === event.meta.batch || schedule.teacher === event.meta.teacher
-      || schedule.room === event.meta.room);
-  }
-
-  returnFirstConflict(scheduleEntry: ScheduleEntry): CalendarEvent {
-    return this.events.filter(e => e.meta.id !== this.entry.id) // need to not consider existing element (when updating)
-      .find(e => this.isInConflict(scheduleEntry, e));
-  }
-
   save(element) {
     console.log('Saving ' + JSON.stringify(element));
     element.from = this.convertTimeInputToDate(element.from);
     element.to = this.convertTimeInputToDate(element.to);
     if (isBefore(element.to, element.from)) {
       this.errorMessage = 'End time is before start time!';
-      this.scheduleForm.controls.to.setErrors({'before start date': true});
+      this.scheduleForm.controls.to.setErrors({ 'before start date': true });
     } else {
       // checking for schedules conflicts first
       const scheduleEntry = new ScheduleEntry(element.from, element.to, element.teacher, element.batch, element.room, element.subject,
-        element.recurring);
-      const conflict: CalendarEvent = this.returnFirstConflict(scheduleEntry);
-      if (conflict) {
-        console.warn('Conflict found for event with ID', conflict.meta.id);
-        if (scheduleEntry.batch === conflict.meta.batch) {
-          this.errorMessage = scheduleEntry.batch + ' is already busy';
-          this.scheduleForm.controls.batch.markAsTouched();
-          this.scheduleForm.controls.batch.setErrors({'already taken': true});
-        } else if (scheduleEntry.teacher === conflict.meta.teacher) {
-          this.errorMessage = scheduleEntry.teacher + ' is already busy';
-          this.scheduleForm.controls.teacher.markAsTouched();
-          this.scheduleForm.controls.teacher.setErrors({taken: true});
-        } else if (scheduleEntry.room === conflict.meta.room) {
-          this.errorMessage = scheduleEntry.room + ' is already taken';
-          this.scheduleForm.controls.room.markAsTouched();
-          this.scheduleForm.controls.room.setErrors({taken: true});
-        }
-        this.errorMessage += ' from ' + conflict.start.toLocaleTimeString() + ' to ' + conflict.end.toLocaleTimeString();
+        element.recurring, this.entry.id);
+      const conflictError = this.scheduleUtil.getConflictError(scheduleEntry, this.events);
+      if (conflictError) {
+        this.errorMessage = conflictError.message;
+        this.scheduleForm.controls[conflictError.fieldInError].markAsTouched();
+        this.scheduleForm.controls[conflictError.fieldInError].setErrors({taken: true});
       } else {
         console.log('No conflict found. Updating database...');
         // save new or update existing
         (this.editingMode ? this.scheduleFsService.updateScheduleEvent(this.entry.id, element) :
           this.scheduleFsService.createScheduleEvent(element))
-        .then(res => {
-          this.dialogRef.close(true);
-        }).catch(error => {
-          const message = error._body;
-          console.log(message);
-          this.errorMessage = message;
-        });
+          .then(res => {
+            this.dialogRef.close(true);
+          }).catch(error => {
+            const message = error._body;
+            console.log(message);
+            this.errorMessage = message;
+          });
       }
+
     }
   }
 
