@@ -84,6 +84,11 @@ export class ScheduleTableComponent implements OnInit {
             title: `<b>(${data.batch}) ${data.subject}</b><br>${data.teacher}<br>${data.room}`,
             color: this.getColorForSubject(data.subject),
             cssClass: 'my-custom-event-class',
+            resizable: {
+              beforeStart: false,
+              afterEnd: true
+            },
+            draggable: true,
             meta: {
               id: e.payload.doc.id,
               batch: data.batch,

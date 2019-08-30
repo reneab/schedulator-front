@@ -52,7 +52,8 @@
         [dayStartHour]=7
         [dayEndHour]=21
         [hourSegmentTemplate]="weekViewHourSegment"
-        (eventClicked)="modifyEvent($event)"
+        (eventClicked)="editEvent($event)"
+        (eventTimesChanged)="modifyEventTimes($event)"
       >
     </mwl-calendar-week-view>
 

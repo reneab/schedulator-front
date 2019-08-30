@@ -1,9 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CalendarEvent } from 'angular-calendar';
+import { CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { addHours, startOfDay, addWeeks, subWeeks } from 'date-fns';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
 import { ScheduleEntry } from '../ScheduleEntry';
+import { ErrorMessageDialogComponent } from '../error-message-dialog/error-message-dialog.component';
+import { ScheduleFirestoreService } from '../schedule-firestore.service';
+import { ScheduleUtilService } from '../schedule-util.service';
 
 @Component({
   selector: 'app-calendar',
@@ -21,25 +24,12 @@ export class CalendarComponent implements OnInit {
   // TODO: create toggle button to make filtering exclusive or multiple
 
   viewDate: Date = new Date();
-
   filteredEvents: CalendarEvent[];
-  // = [
-  //    {
-  //     start: addHours(startOfDay(new Date()), 8),
-  //     end: addHours(startOfDay(addDays(new Date(), 1)), 10),
-  //     title: '<b>Web</b>, Ean Velayo, LB442',
-  //     color: colors.blue,
-  //     resizable: {
-  //       beforeStart: false,
-  //       afterEnd: true
-  //     },
-  //     draggable: true
-  //   },
-  // ];
-
   selectedFilters: string[] = [];
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public scheduleFsService: ScheduleFirestoreService,
+              public scheduleUtil: ScheduleUtilService,
+              public dialog: MatDialog) { }
 
   ngOnInit() { }
 
@@ -102,10 +92,47 @@ export class CalendarComponent implements OnInit {
     this.openScheduleInputDialog(false, startDate, toDisplay);
   }
 
-  modifyEvent({ event }: { event: CalendarEvent }): void {
+  editEvent({ event }: { event: CalendarEvent }): void {
     console.log('Modifying event with ID: ', event.meta.id);
     this.openScheduleInputDialog(true, event.start, new ScheduleEntry(event.start, event.end,
       event.meta.teacher, event.meta.batch, event.meta.room, event.meta.subject, event.meta.recurring, event.meta.id),
     );
+  }
+
+  // for drag and resize
+  modifyEventTimes({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
+
+    const modifiedEntry = new ScheduleEntry(newStart, newEnd, event.meta.teacher,
+      event.meta.batch, event.meta.room, event.meta.subject, event.meta.recurring, event.meta.id);
+
+    const conflictError = this.scheduleUtil.getConflictError(modifiedEntry, this.events);
+    if (conflictError) {
+      this.dialog.open(ErrorMessageDialogComponent, {
+        width: '500px',
+        data: {
+          header: 'Conflict found',
+          errorMessage: conflictError.message
+        }
+      });
+    } else {
+      // FIXME: schedules are not updated in GUI
+      console.log('No conflict found. Updating database...');
+      this.scheduleFsService.updateScheduleEvent(modifiedEntry.id, {
+        from: modifiedEntry.from,
+        to: modifiedEntry.to
+      })
+        .then(res => {
+          console.log('Success');
+          event.start = newStart;
+          event.end = newEnd;
+        }).catch(error => {
+          this.dialog.open(ErrorMessageDialogComponent, {
+            width: '500px',
+            data: {
+              errorMessage: error._body
+            }
+          });
+        });
+    }
   }
 }
