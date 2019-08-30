@@ -69,50 +69,75 @@ export class ScheduleTableComponent implements OnInit {
     console.log('Loading settings...');
     this.loading = true;
     this.settingsFsService.getSettings().subscribe(doc => {
-      this.settings = doc;
-      console.log('Initialized with settings', this.settings);
+      this.loading = false;
+      if (doc) {
+        this.settings = doc;
+        console.log('Initialized with settings', this.settings);
 
-      console.log('Loading schedule events...');
-      this.scheduleFsService.getScheduleEvents().subscribe(items => {
-        console.log('Retreived from Firestore: ', items);
-        this.events = items.map(e => {
-          // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
-          const data = e.payload.doc.data();
-          const event: CalendarEvent = {
-            start: new Date(data.from.seconds * 1000),
-            end: new Date(data.to.seconds * 1000),
-            title: `<b>(${data.batch}) ${data.subject}</b><br>${data.teacher}<br>${data.room}`,
-            color: this.getColorForSubject(data.subject),
-            cssClass: 'my-custom-event-class',
-            resizable: {
-              beforeStart: false,
-              afterEnd: true
-            },
-            draggable: true,
-            meta: {
-              id: e.payload.doc.id,
-              batch: data.batch,
-              teacher: data.teacher,
-              subject: data.subject,
-              room: data.room,
-              recurring: data.recurring
-            }
-          };
-          console.log('Loaded event:', event);
-          return event;
-        });
+        console.log('Loading schedule events...');
+        this.loadSchedules();
+      } else {
+        console.warn('Settings not found. Aborting');
+        this.openErrorDialog('Settings not found');
+      }
+    },
+    err => {
+      console.warn('Could not connect to settings database', err);
+      this.openErrorDialog('Could not connect to settings database');
+    },
+    () => console.log('Completed HTTP request to settings database')
+    );
+  }
 
-        console.log('Done');
-        this.loading = false;
+  loadSchedules(): void {
+    this.loading = true;
+    this.scheduleFsService.getScheduleEvents().subscribe(items => {
+      console.log('Retreived from Firestore: ', items);
+      this.events = items.map(e => {
+        // TODO: convert data to ScheduleEntry, and from there to calendar event using another function
+        const data = e.payload.doc.data();
+        const event: CalendarEvent = {
+          start: new Date(data.from.seconds * 1000),
+          end: new Date(data.to.seconds * 1000),
+          title: `<b>(${data.batch}) ${data.subject}</b><br>${data.teacher}<br>${data.room}`,
+          color: this.getColorForSubject(data.subject),
+          cssClass: 'my-custom-event-class',
+          resizable: {
+            beforeStart: false,
+            afterEnd: true
+          },
+          draggable: true,
+          meta: {
+            id: e.payload.doc.id,
+            batch: data.batch,
+            teacher: data.teacher,
+            subject: data.subject,
+            room: data.room,
+            recurring: data.recurring
+          }
+        };
+        console.log('Loaded event:', event);
+        return event;
       });
-    });
+
+      console.log('Done');
+      this.loading = false;
+    },
+    err => {
+      console.warn('Could not connect to schedules database', err);
+      this.openErrorDialog('Could not connect to schedules database');
+    },
+    () => console.log('Completed HTTP request to schedules database')
+    );
   }
 
   openErrorDialog(message: string): void {
     this.dialog.open(ErrorMessageDialogComponent, {
-      height: '180px',
       width: '350px',
-      data: { errorMessage: message }
+      data: {
+        header: 'Technical error',
+        errorMessage: message
+      }
     });
   }
 
