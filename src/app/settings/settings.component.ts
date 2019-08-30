@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {MatChipInputEvent, MatIconRegistry} from '@angular/material';
+import {MatChipInputEvent, MatIconRegistry, MatDialog} from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { addWeeks, subWeeks } from 'date-fns';
 import { SettingsFirestoreService } from '../settings-firestore.service';
 import { ScheduleFirestoreService } from '../schedule-firestore.service';
+import { ErrorMessageDialogComponent } from '../error-message-dialog/error-message-dialog.component';
 
 @Component({
   selector: 'app-settings',
@@ -25,15 +26,34 @@ export class SettingsComponent implements OnInit {
 
   constructor(public settingsFsService: SettingsFirestoreService,
               public scheduleFsService: ScheduleFirestoreService,
-              public iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) { }
+              public iconRegistry: MatIconRegistry,
+              public dialog: MatDialog,
+              sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.loading = true;
     this.settingsFsService.getSettings().subscribe(doc => {
-      console.log('Loaded settings', doc);
-      this.settings = doc;
       this.loading = false;
-    });
+      if (doc) {
+        this.settings = doc;
+        console.log('Loaded settings', this.settings);
+      } else {
+        console.log('Settings not found');
+        this.dialog.open(ErrorMessageDialogComponent, {
+          width: '400px',
+          data: { errorMessage: 'Settings not found' }
+        });
+      }
+    },
+    err => {
+      console.warn('Could not connect to settings database', err);
+      this.dialog.open(ErrorMessageDialogComponent, {
+        width: '400px',
+        data: { errorMessage: 'Could not connect to database' }
+      });
+    },
+    () => console.log('Completed HTTP request to settings database')
+    );
   }
 
   saveSettings(): void {
