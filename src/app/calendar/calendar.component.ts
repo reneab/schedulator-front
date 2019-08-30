@@ -7,6 +7,7 @@ import { ScheduleEntry } from '../ScheduleEntry';
 import { ErrorMessageDialogComponent } from '../error-message-dialog/error-message-dialog.component';
 import { ScheduleFirestoreService } from '../schedule-firestore.service';
 import { ScheduleUtilService } from '../schedule-util.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -26,6 +27,7 @@ export class CalendarComponent implements OnInit {
   viewDate: Date = new Date();
   filteredEvents: CalendarEvent[];
   selectedFilters: string[] = [];
+  refresh: Subject<any> = new Subject(); // used for drag and resize functionalities
 
   constructor(public scheduleFsService: ScheduleFirestoreService,
               public scheduleUtil: ScheduleUtilService,
@@ -102,6 +104,9 @@ export class CalendarComponent implements OnInit {
   // for drag and resize
   modifyEventTimes({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
 
+    const originalStart = event.start; // for rollback in case of database error
+    const originalEnd = event.end;
+
     const modifiedEntry = new ScheduleEntry(newStart, newEnd, event.meta.teacher,
       event.meta.batch, event.meta.room, event.meta.subject, event.meta.recurring, event.meta.id);
 
@@ -115,21 +120,26 @@ export class CalendarComponent implements OnInit {
         }
       });
     } else {
-      // FIXME: schedules are not updated in GUI
       console.log('No conflict found. Updating database...');
+      event.start = newStart;
+      event.end = newEnd;
       this.scheduleFsService.updateScheduleEvent(modifiedEntry.id, {
         from: modifiedEntry.from,
         to: modifiedEntry.to
       })
         .then(res => {
           console.log('Success');
-          event.start = newStart;
-          event.end = newEnd;
-        }).catch(error => {
+          this.refresh.next();
+        })
+        .catch(error => {
+          event.start = originalStart;
+          event.end = originalEnd;
+          console.warn(error._body);
           this.dialog.open(ErrorMessageDialogComponent, {
             width: '500px',
             data: {
-              errorMessage: error._body
+              header: 'Technical error',
+              errorMessage: 'Could not perform update in database'
             }
           });
         });
