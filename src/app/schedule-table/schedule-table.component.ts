@@ -59,7 +59,8 @@ export class ScheduleTableComponent implements OnInit {
 
   settings: any = { colors: {} };
   events: CalendarEvent[];
-  loading: boolean; // use for a loading spinner in calendar component
+  disabled: boolean; // use to display overlay if error while loading
+  loading: boolean; // use to display loading spinner
 
   constructor(public settingsFsService: SettingsFirestoreService,
               public scheduleFsService: ScheduleFirestoreService,
@@ -67,12 +68,14 @@ export class ScheduleTableComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Loading settings...');
+    this.disabled = true;
     this.loading = true;
     this.settingsFsService.getSettings().subscribe(doc => {
       this.loading = false;
       if (doc) {
         this.settings = doc;
         console.log('Initialized with settings', this.settings);
+        this.disabled = false;
 
         console.log('Loading schedule events...');
         this.loadSchedules();
@@ -91,6 +94,7 @@ export class ScheduleTableComponent implements OnInit {
 
   loadSchedules(): void {
     this.loading = true;
+    this.disabled = true;
     this.scheduleFsService.getScheduleEvents().subscribe(items => {
       console.log('Retreived from Firestore: ', items);
       this.events = items.map(e => {
@@ -122,6 +126,7 @@ export class ScheduleTableComponent implements OnInit {
 
       console.log('Done');
       this.loading = false;
+      this.disabled = false;
     },
     err => {
       console.warn('Could not connect to schedules database', err);

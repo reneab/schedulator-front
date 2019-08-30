@@ -20,7 +20,6 @@ export class CalendarComponent implements OnInit {
   @Input() events: CalendarEvent[];
   @Input() filteringKey: string;
   @Input() settingsFilteringKey: string;
-  @Input() loading: boolean;
 
   // TODO: create toggle button to make filtering exclusive or multiple
 

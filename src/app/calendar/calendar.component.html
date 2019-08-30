@@ -19,44 +19,35 @@
   </div>
 </ng-template>
 
-<div class="wrapper">
-  <div class="overlay" *ngIf="loading">
-    <div class="spinner-wrapper">
-      <mat-spinner></mat-spinner>
-    </div>
-  </div>
 
-  <div>
-    <!-- controls & filters -->
-    <mat-toolbar class="controls-bar">
-      <mat-toolbar-row>
-        <button mat-raised-button color="accent" (click)="goToPreviousWeek()">Previous</button>
-        <span class="spacer"></span>
-        <mat-button-toggle-group #filterToggleGroup="matButtonToggleGroup" multiple="true">
-          <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]" [value]="f" (change)="onChangeToggle($event)">
-            {{f}}
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-        <span class="spacer"></span>
-        <button mat-raised-button color="accent" (click)="goToNextWeek()">Next</button>
-      </mat-toolbar-row>
-    </mat-toolbar>
-  
-  <!-- Main view -->
-    <mwl-calendar-week-view
-        precision="minutes"
-        [viewDate]="viewDate"
-        [events]="filteredEvents"
-        [weekStartsOn]=1
-        [excludeDays]="[0]"
-        [dayStartHour]=7
-        [dayEndHour]=21
-        [hourSegmentTemplate]="weekViewHourSegment"
-        [refresh]="refresh"
-        (eventClicked)="editEvent($event)"
-        (eventTimesChanged)="modifyEventTimes($event)"
-      >
-    </mwl-calendar-week-view>
+<!-- controls & filters -->
+<mat-toolbar class="controls-bar">
+  <mat-toolbar-row>
+    <button mat-raised-button color="accent" (click)="goToPreviousWeek()">Previous</button>
+    <span class="spacer"></span>
+    <mat-button-toggle-group #filterToggleGroup="matButtonToggleGroup" multiple="true">
+      <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]" [value]="f" (change)="onChangeToggle($event)">
+        {{f}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="goToNextWeek()">Next</button>
+  </mat-toolbar-row>
+</mat-toolbar>
 
-  </div>
-</div>
+<!-- Main view -->
+<mwl-calendar-week-view
+    precision="minutes"
+    [viewDate]="viewDate"
+    [events]="filteredEvents"
+    [weekStartsOn]=1
+    [excludeDays]="[0]"
+    [dayStartHour]=7
+    [dayEndHour]=21
+    [hourSegmentTemplate]="weekViewHourSegment"
+    [refresh]="refresh"
+    (eventClicked)="editEvent($event)"
+    (eventTimesChanged)="modifyEventTimes($event)"
+  >
+</mwl-calendar-week-view>
+

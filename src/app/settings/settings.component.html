@@ -1,6 +1,6 @@
 <div class="wrapper">
-    <div class="overlay" *ngIf="loading">
-      <div class="spinner-wrapper">
+    <div class="overlay" *ngIf="disabled">
+      <div class="spinner-wrapper" *ngIf="loading">
         <mat-spinner></mat-spinner>
       </div>
     </div>

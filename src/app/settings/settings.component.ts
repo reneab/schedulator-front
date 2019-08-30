@@ -20,6 +20,7 @@ export class SettingsComponent implements OnInit {
   changed = false; // used for disabling Save button
   saved = false; // used for displaying success icon
   loading: boolean; // used to display loading spinner
+  disabled: boolean; // used to display overlay
   errorMessage: string;
 
   settings: any = {colors: {}};
@@ -32,11 +33,13 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
+    this.disabled = true;
     this.settingsFsService.getSettings().subscribe(doc => {
       this.loading = false;
       if (doc) {
         this.settings = doc;
         console.log('Loaded settings', this.settings);
+        this.disabled = false;
       } else {
         console.log('Settings not found');
         this.dialog.open(ErrorMessageDialogComponent, {
