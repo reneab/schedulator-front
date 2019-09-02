@@ -74,6 +74,9 @@ export class ScheduleTableComponent implements OnInit {
       this.loading = false;
       if (doc) {
         this.settings = doc;
+        this.settings.batches.sort();
+        this.settings.teachers.sort();
+        this.settings.rooms.sort();
         console.log('Initialized with settings', this.settings);
         this.disabled = false;
 
