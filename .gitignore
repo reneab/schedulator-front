@@ -13,6 +13,7 @@ firebase*
 /dist
 /tmp
 /out-tsc
+*.css
 # Only exists if Bazel was run
 /bazel-out
 
