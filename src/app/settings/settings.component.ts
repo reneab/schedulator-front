@@ -86,12 +86,20 @@ export class SettingsComponent implements OnInit {
     const value = event.value;
 
     // Add value to corresponding array
-    if ((value || '').trim()) {
-      console.log('Adding ' + value + ' to setting ' + pathToSetting);
+    if (value) {
+      const trimmed = value.trim();
       const arr = pathToSetting.split('.').reduce((p, prop) => p[prop], this.settings);
-      arr.push(value.trim());
-      this.changed = true;
-      this.saved = false;
+      if (arr.filter(i => i.toLowerCase() === trimmed.toLowerCase()).length > 0) {
+        const message = 'Item ' + trimmed + ' already exists';
+        console.warn(message);
+        this.errorMessage = message;
+      } else {
+        console.log('Adding ' + trimmed + ' to setting ' + pathToSetting);
+        arr.push(trimmed);
+        this.changed = true;
+        this.saved = false;
+        this.errorMessage = null;
+      }
     }
 
     // Reset the input value
