@@ -155,7 +155,7 @@ export class ScheduleTableComponent implements OnInit {
     } else {
       for (const color in this.settings.colors) {
         // look for one entry in settings.colors that is contained in the subject title
-        if (this.settings.colors[color].find(str => subject.toLowerCase().indexOf(str) >= 0)) {
+        if (this.settings.colors[color].find(str => subject.toLowerCase().indexOf(str.toLowerCase()) >= 0)) {
           return myColors[color];
         }
       }
