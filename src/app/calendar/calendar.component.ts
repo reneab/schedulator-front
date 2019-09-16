@@ -85,7 +85,7 @@ export class CalendarComponent implements OnInit {
     const nbOfActiveToggles = this.selectedFilters.length;
     const toDisplay = new ScheduleEntry(startDate, addHours(startDate, 1),
       // so that the default event has data from the last activate toggle
-      this.filteringKey === 'teacher' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.teachers[0],
+      this.filteringKey === 'teacher' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : null,
       this.filteringKey === 'batch' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.batches[0],
       this.filteringKey === 'room' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.rooms[0],
       null,

@@ -20,8 +20,8 @@ export class ScheduleUtilService {
       (isAfter(schedule.from, event.start) || isEqual(schedule.from, event.start)) && isBefore(schedule.from, event.end)
       || isAfter(schedule.to, event.start) && (isBefore(schedule.to, event.end) || isEqual(schedule.to, event.end))
       || isBefore(schedule.from, event.start) && isAfter(schedule.to, event.end);
-    return isTimeConflict && (schedule.batch === event.meta.batch || schedule.teacher === event.meta.teacher
-      || schedule.room === event.meta.room);
+    return isTimeConflict && (schedule.batch === event.meta.batch || schedule.room === event.meta.room ||
+      (schedule.teacher !== null && schedule.teacher === event.meta.teacher));
   }
 
 
@@ -39,12 +39,12 @@ export class ScheduleUtilService {
       if (scheduleEntry.batch === conflict.meta.batch) {
         errorMessage = scheduleEntry.batch + ' is already busy';
         fieldName = 'batch';
-      } else if (scheduleEntry.teacher === conflict.meta.teacher) {
-        errorMessage = scheduleEntry.teacher + ' is already busy';
-        fieldName = 'teacher';
       } else if (scheduleEntry.room === conflict.meta.room) {
         errorMessage = scheduleEntry.room + ' is already taken';
         fieldName = 'room';
+      } else if (scheduleEntry.teacher === conflict.meta.teacher) {
+        errorMessage = scheduleEntry.teacher + ' is already busy';
+        fieldName = 'teacher';
       }
       errorMessage += ' from ' + conflict.start.toLocaleTimeString() + ' to ' + conflict.end.toLocaleTimeString();
       return {message: errorMessage, fieldInError: fieldName};
