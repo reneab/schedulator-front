@@ -21,17 +21,13 @@
 
 
 <!-- controls & filters -->
-<mat-toolbar class="controls-bar">
+<mat-toolbar class="controls-bar" color="primary">
   <mat-toolbar-row>
-    <button mat-raised-button color="accent" (click)="goToPreviousWeek()">Previous</button>
-    <span class="spacer"></span>
     <mat-button-toggle-group #filterToggleGroup="matButtonToggleGroup" multiple="true">
       <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]" [value]="f" (change)="onChangeToggle($event)">
         {{f}}
       </mat-button-toggle>
     </mat-button-toggle-group>
-    <span class="spacer"></span>
-    <button mat-raised-button color="accent" (click)="goToNextWeek()">Next</button>
   </mat-toolbar-row>
 </mat-toolbar>
 

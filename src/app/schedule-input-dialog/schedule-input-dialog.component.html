@@ -35,7 +35,6 @@
         <mat-option *ngFor = "let o of this.settings.teachers" [value] = "o">{{o}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-slide-toggle formControlName="recurring" color="primary">Recurring?</mat-slide-toggle>
   </div>
 </mat-dialog-content>
 <p class="error">{{errorMessage}}</p>

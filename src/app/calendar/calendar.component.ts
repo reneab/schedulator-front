@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';
-import { addHours, startOfDay, addWeeks, subWeeks } from 'date-fns';
+import { addHours, startOfDay } from 'date-fns';
 import { MatDialog } from '@angular/material';
 import { ScheduleInputDialogComponent } from '../schedule-input-dialog/schedule-input-dialog.component';
 import { ScheduleEntry } from '../ScheduleEntry';
@@ -8,6 +8,7 @@ import { ErrorMessageDialogComponent } from '../error-message-dialog/error-messa
 import { ScheduleFirestoreService } from '../schedule-firestore.service';
 import { ScheduleUtilService } from '../schedule-util.service';
 import { Subject } from 'rxjs';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'app-calendar',
@@ -21,9 +22,7 @@ export class CalendarComponent implements OnInit {
   @Input() filteringKey: string;
   @Input() settingsFilteringKey: string;
 
-  // TODO: create toggle button to make filtering exclusive or multiple
-
-  viewDate: Date = new Date();
+  viewDate: Date = environment.calendarViewDate;
   filteredEvents: CalendarEvent[];
   selectedFilters: string[] = [];
   refresh: Subject<any> = new Subject(); // used for drag and resize functionalities
@@ -33,14 +32,6 @@ export class CalendarComponent implements OnInit {
               public dialog: MatDialog) { }
 
   ngOnInit() { }
-
-  goToPreviousWeek(): void {
-    this.viewDate = subWeeks(this.viewDate, 1);
-  }
-
-  goToNextWeek(): void {
-    this.viewDate = addWeeks(this.viewDate, 1);
-  }
 
   onChangeToggle(event): void {
     const value: string = event.value;
@@ -88,15 +79,14 @@ export class CalendarComponent implements OnInit {
       this.filteringKey === 'teacher' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : null,
       this.filteringKey === 'batch' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.batches[0],
       this.filteringKey === 'room' && nbOfActiveToggles > 0 ? this.selectedFilters[nbOfActiveToggles - 1] : this.settings.rooms[0],
-      null,
-      true);
+      null);
     this.openScheduleInputDialog(false, startDate, toDisplay);
   }
 
   editEvent({ event }: { event: CalendarEvent }): void {
     console.log('Modifying event with ID: ', event.meta.id);
     this.openScheduleInputDialog(true, event.start, new ScheduleEntry(event.start, event.end,
-      event.meta.teacher, event.meta.batch, event.meta.room, event.meta.subject, event.meta.recurring, event.meta.id),
+      event.meta.teacher, event.meta.batch, event.meta.room, event.meta.subject, event.meta.id),
     );
   }
 
@@ -107,7 +97,7 @@ export class CalendarComponent implements OnInit {
     const originalEnd = event.end;
 
     const modifiedEntry = new ScheduleEntry(newStart, newEnd, event.meta.teacher,
-      event.meta.batch, event.meta.room, event.meta.subject, event.meta.recurring, event.meta.id);
+      event.meta.batch, event.meta.room, event.meta.subject, event.meta.id);
 
     const conflictError = this.scheduleUtil.getConflictError(modifiedEntry, this.events);
     if (conflictError) {

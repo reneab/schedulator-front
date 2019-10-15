@@ -46,8 +46,7 @@ export class ScheduleInputDialogComponent implements OnInit {
       batch: new FormControl(this.entry.batch || this.settings.batches[0], Validators.required),
       subject: new FormControl(this.entry.subject, Validators.required),
       room: new FormControl(this.entry.room || this.settings.rooms[0], Validators.required),
-      teacher: new FormControl(this.entry.teacher),
-      recurring: new FormControl(this.entry.recurring)
+      teacher: new FormControl(this.entry.teacher)
     });
   }
 
@@ -69,7 +68,7 @@ export class ScheduleInputDialogComponent implements OnInit {
     } else {
       // checking for schedules conflicts first
       const scheduleEntry = new ScheduleEntry(element.from, element.to, element.teacher, element.batch, element.room, element.subject,
-        element.recurring, this.entry.id);
+        this.entry.id);
       const conflictError = this.scheduleUtil.getConflictError(scheduleEntry, this.events);
       if (conflictError) {
         this.errorMessage = conflictError.message;

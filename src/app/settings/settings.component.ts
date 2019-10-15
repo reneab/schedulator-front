@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {MatChipInputEvent, MatIconRegistry, MatDialog} from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { addWeeks, subWeeks } from 'date-fns';
 import { SettingsFirestoreService } from '../settings-firestore.service';
 import { ScheduleFirestoreService } from '../schedule-firestore.service';
 import { ErrorMessageDialogComponent } from '../error-message-dialog/error-message-dialog.component';
@@ -105,29 +104,6 @@ export class SettingsComponent implements OnInit {
     // Reset the input value
     if (input) {
       input.value = '';
-    }
-  }
-
-  addOneWeekToTimeStamp(dateInSeconds: number): Date {
-    return addWeeks(new Date(dateInSeconds * 1000), 1);
-  }
-
-  postponeOneWeek() {
-    if (confirm('Are you sure you want to move all schedule events up one week?')) {
-      console.warn('Updating all schedules by one week...');
-      this.scheduleFsService.getEventsAsSnapshot().forEach((item) => {
-        item.docs
-        .filter(d => d.data().recurring) // postpone only recurring items
-        .forEach(d => {
-          console.log('Processing ', d.id, ' on ', new Date(d.data().from.seconds * 1000));
-          this.scheduleFsService.updateScheduleEvent(d.id,
-            {
-              from: this.addOneWeekToTimeStamp(d.data().from.seconds),
-              to: this.addOneWeekToTimeStamp(d.data().to.seconds),
-            }
-          );
-        });
-      });
     }
   }
 

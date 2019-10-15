@@ -5,6 +5,7 @@
 export const environment = {
     production: false,
     VERSION: require('../../package.json').version,
+    calendarViewDate: new Date(),
     firebase: {
         apiKey: 'AIzaSyAX2Qgm27HmSNIbmfLyJ5ATpadX9efupiU',
         authDomain: 'schedule-master-80cba.firebaseapp.com',

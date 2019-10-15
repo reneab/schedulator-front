@@ -119,8 +119,7 @@ export class ScheduleTableComponent implements OnInit {
             batch: data.batch,
             teacher: data.teacher,
             subject: data.subject,
-            room: data.room,
-            recurring: data.recurring
+            room: data.room
           }
         };
         console.log('Loaded event:', event);
