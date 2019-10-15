@@ -142,6 +142,26 @@ describe('ScheduleUtilService', () => {
     expect(service.isInConflict(toAdd, existingEvent)).toEqual(true);
   });
 
+  it('should return no conflict if teacher is USC', () => {
+    const dayStart = startOfDay(new Date());
+    const existingEvent: CalendarEvent = {
+      start: addHours(dayStart, 4), end: addHours(dayStart, 5), title: '',
+      meta: { teacher: 'USC', room: 'USC' }
+    };
+    const toAdd = new ScheduleEntry(addHours(dayStart, 4), addHours(dayStart, 5), 'USC', '2020A', 'C1', 'Mecha', true);
+    expect(service.isInConflict(toAdd, existingEvent)).toEqual(false);
+  });
+
+  it('should return no conflict if room is USC', () => {
+    const dayStart = startOfDay(new Date());
+    const existingEvent: CalendarEvent = {
+      start: addHours(dayStart, 4), end: addHours(dayStart, 5), title: '',
+      meta: { teacher: 'USC', room: 'USC' }
+    };
+    const toAdd = new ScheduleEntry(addHours(dayStart, 4), addHours(dayStart, 5), 'Jun Rey', '2020A', 'USC', 'Mecha', true);
+    expect(service.isInConflict(toAdd, existingEvent)).toEqual(false);
+  });
+
   it('should return no conflict if there are no events', () => {
     const dayStart = startOfDay(new Date());
     const events = [];

@@ -20,8 +20,9 @@ export class ScheduleUtilService {
       (isAfter(schedule.from, event.start) || isEqual(schedule.from, event.start)) && isBefore(schedule.from, event.end)
       || isAfter(schedule.to, event.start) && (isBefore(schedule.to, event.end) || isEqual(schedule.to, event.end))
       || isBefore(schedule.from, event.start) && isAfter(schedule.to, event.end);
-    return isTimeConflict && (schedule.batch === event.meta.batch || schedule.room === event.meta.room ||
-      (schedule.teacher !== null && schedule.teacher === event.meta.teacher));
+    return isTimeConflict
+      && (schedule.batch === event.meta.batch || schedule.room === event.meta.room && schedule.room !== 'USC'
+        || (schedule.teacher === event.meta.teacher && schedule.teacher !== null && schedule.teacher !== 'USC'));
   }
 
 
