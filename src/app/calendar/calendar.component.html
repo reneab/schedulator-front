@@ -26,7 +26,10 @@
     <button mat-raised-button color="accent" (click)="goToPreviousWeek()">Previous</button>
     <span class="spacer"></span>
     <mat-button-toggle-group #filterToggleGroup="matButtonToggleGroup" multiple="true">
-      <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]" [value]="f" (change)="onChangeToggle($event)">
+      <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]"
+        [value]="f" 
+        (change)="onChangeToggle($event)"
+        [ngClass]="{'shrinked': settings[settingsFilteringKey].length > 14}">
         {{f}}
       </mat-button-toggle>
     </mat-button-toggle-group>
