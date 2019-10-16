@@ -24,7 +24,10 @@
 <mat-toolbar class="controls-bar" color="primary">
   <mat-toolbar-row>
     <mat-button-toggle-group #filterToggleGroup="matButtonToggleGroup" multiple="true">
-      <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]" [value]="f" (change)="onChangeToggle($event)">
+      <mat-button-toggle *ngFor="let f of settings[settingsFilteringKey]"
+        [value]="f" 
+        (change)="onChangeToggle($event)"
+        [ngClass]="{'shrinked': settings[settingsFilteringKey].length > 14}">
         {{f}}
       </mat-button-toggle>
     </mat-button-toggle-group>
